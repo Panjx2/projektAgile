@@ -10,10 +10,9 @@ public class FileEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private Long file_id;
 
     private String name;
-    //TODO
     private String path;
 
     @ManyToOne

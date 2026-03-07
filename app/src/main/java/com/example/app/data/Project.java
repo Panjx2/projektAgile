@@ -13,7 +13,7 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private Long project_id;
 
     @Column(unique = true, nullable = false)
     private String name;
