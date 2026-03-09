@@ -1,0 +1,16 @@
+/home/johny/projektAgile/app/src/main/java/com/example/app/AppApplication.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/controller/ProjectController.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/controller/TaskController.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/controller/UserController.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/data/FileEntity.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/data/Project.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/data/Task.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/data/TaskStatus.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/data/User.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/repository/FileEntityRepository.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/repository/ProjectRepository.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/repository/TaskRepository.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/repository/UserRepository.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/service/ProjectService.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/service/TaskService.java
+/home/johny/projektAgile/app/src/main/java/com/example/app/service/UserService.java
