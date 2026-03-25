@@ -1,7 +1,7 @@
 package com.project.controller;
 
+import com.project.service.ProjectService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,59 +9,60 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpStatusCodeException;
+import com.project.exception.HttpException;
 import org.apache.logging.log4j.util.Strings;
-import com.project.model.Projekt;
-import com.project.service.ProjektService;
+import com.project.model.Project;
 
 @Controller
 public class ProjectController {
-    private ProjektService projektService;
+    private final ProjectService projectService;
 
-    public ProjectController(ProjektService projektService) {
-        this.projektService = projektService;
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
     }
 
-    @GetMapping("/projektList")
-    public String projektList(Model model, Pageable pageable) {
-        model.addAttribute("projekty", projektService.getProjekty(pageable).getContent());
-        return "projektList";
+    @GetMapping("/projectList")
+    public String projectList(Model model) {
+        model.addAttribute("projekty", projectService.getAllProjects());
+        return "projectList";
     }
 
-    @GetMapping("/projektEdit")
-    public String projektEdit(@RequestParam(name="projektId", required = false) Integer projektId, Model model) {
-        if(projektId != null) {
-            model.addAttribute("projekt", projektService.getProjekt(projektId).get());
+    @GetMapping("/projectEdit")
+    public String projectEdit(@RequestParam(name = "projectId", required = false) Long projectId, Model model) {
+        if(projectId != null) {
+            model.addAttribute("project", projectService.getProjectById(projectId));
         } else {
-            Projekt projekt = new Projekt();
-            model.addAttribute("projekt", projekt);
+            model.addAttribute("project", new Project());
         }
-        return "projektEdit";
+        return "projectEdit";
     }
 
-    @PostMapping(path = "/projektEdit")
-    public String projektEditSave(@ModelAttribute @Valid Projekt projekt, BindingResult bindingResult) {
+    @PostMapping(path = "/projectEdit")
+    public String projectEditSave(@ModelAttribute @Valid Project project, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "projektEdit";
+            return "projectEdit";
         }
         try {
-            projekt = projektService.setProjekt(projekt);
-        } catch (HttpStatusCodeException e) {
-            bindingResult.rejectValue(Strings.EMPTY, String.valueOf(e.getStatusCode().value()),
-                    e.getStatusCode().toString());
-            return "projektEdit";
+            if (project.getProjectId() == null) {
+                projectService.createProject(project);
+            } else {
+                projectService.updateProject(project.getProjectId(), project);
+            }
+        } catch (HttpException e) {
+            bindingResult.rejectValue(Strings.EMPTY, "http.error", e.getMessage());
+            return "projectEdit";
         }
-        return "redirect:/projektList";
+        return "redirect:/projectList";
     }
 
-    @PostMapping(params="cancel", path = "/projektEdit")
-    public String projektEditCancel() {
-        return "redirect:/projektList";
+    @PostMapping(params="cancel", path = "/projectEdit")
+    public String projectEditCancel() {
+        return "redirect:/projectList";
     }
 
-    @PostMapping(params="delete", path = "/projektEdit")
-    public String projektEditDelete(@ModelAttribute Projekt projekt) {
-        projektService.deleteProjekt(projekt.getProjektId());
-        return "redirect:/projektList";
+    @PostMapping(params="delete", path = "/projectEdit")
+    public String projectEditDelete(@ModelAttribute Project project) {
+        projectService.deleteProject(project.getProjectId());
+        return "redirect:/projectList";
     }
 }

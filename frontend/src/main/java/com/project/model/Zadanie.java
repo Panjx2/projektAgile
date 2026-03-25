@@ -32,5 +32,5 @@ public class Zadanie {
     private LocalDateTime dataCzasDodania;
 
     @JsonIgnoreProperties({"projekt"})
-    private Projekt projekt;
+    private Project projekt;
 }
