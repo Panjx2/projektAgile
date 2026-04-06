@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/mock-views.css}" rel="stylesheet" />
+    <title>Mock - Lista Uzytkownikow</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+</div>
+
+<div class="root">
+    <header class="header">
+        <p class="eyebrow">Mock View</p>
+        <h1>Uzytkownicy</h1>
+        <p class="subtitle">Widok na sucho bez polaczenia z backendem.</p>
+        <nav class="nav">
+            <a class="nav-chip" href="/projektList">Projekty</a>
+            <a class="nav-chip active" href="#">Uzytkownicy</a>
+            <a class="nav-chip" href="/taskListMock">Zadania</a>
+        </nav>
+    </header>
+
+    <section class="panel">
+        <div class="top">
+            <strong>Lista uzytkownikow (mockowane dane)</strong>
+            <a class="btn" href="/userEditMock">+ Dodaj uzytkownika</a>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Rola</th>
+                <th>Akcja</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>anna.nowak</td>
+                <td>anna@example.com</td>
+                <td>MANAGER</td>
+                <td><a class="btn secondary" href="/userEditMock">Edytuj</a></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>m.kowalski</td>
+                <td>m.kowalski@example.com</td>
+                <td>DEV</td>
+                <td><a class="btn secondary" href="/userEditMock">Edytuj</a></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>test.viewer</td>
+                <td>viewer@example.com</td>
+                <td>VIEWER</td>
+                <td><a class="btn secondary" href="/userEditMock">Edytuj</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="note">To jest makieta UI. Podpiecie danych i endpointow mozna zrobic pozniej.</p>
+    </section>
+</div>
+</body>
+</html>

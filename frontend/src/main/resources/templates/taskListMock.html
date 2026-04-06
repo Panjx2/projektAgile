@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/mock-views.css}" rel="stylesheet" />
+    <title>Mock - Lista Zadan</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+</div>
+
+<div class="root">
+    <header class="header">
+        <p class="eyebrow">Mock View</p>
+        <h1>Zadania</h1>
+        <p class="subtitle">Widok na sucho dla listy zadan projektu.</p>
+        <nav class="nav">
+            <a class="nav-chip" href="/projektList">Projekty</a>
+            <a class="nav-chip" href="/userListMock">Uzytkownicy</a>
+            <a class="nav-chip active" href="#">Zadania</a>
+        </nav>
+    </header>
+
+    <section class="panel">
+        <div class="top">
+            <strong>Lista zadan (mockowane)</strong>
+            <a class="btn" href="/taskEditMock">+ Dodaj zadanie</a>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Priorytet</th>
+                <th>Status</th>
+                <th>Przypisany</th>
+                <th>Akcja</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>14</td>
+                <td>Przygotowac dashboard</td>
+                <td>HIGH</td>
+                <td>IN_PROGRESS</td>
+                <td>anna.nowak</td>
+                <td><a class="btn secondary" href="/taskEditMock">Edytuj</a></td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>Naprawic walidacje formularza</td>
+                <td>MEDIUM</td>
+                <td>TODO</td>
+                <td>m.kowalski</td>
+                <td><a class="btn secondary" href="/taskEditMock">Edytuj</a></td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>Wdrozyc poprawki CSS</td>
+                <td>LOW</td>
+                <td>DONE</td>
+                <td>test.viewer</td>
+                <td><a class="btn secondary" href="/taskEditMock">Edytuj</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="note">Makieta przygotowana pod przyszle podpiecie TaskService.</p>
+    </section>
+</div>
+</body>
+</html>
