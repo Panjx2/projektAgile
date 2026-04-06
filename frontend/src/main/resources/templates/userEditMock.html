@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- <link th:href="@{/css/mock-views.css}" rel="stylesheet" /> -->
+     <link rel="stylesheet" href="../static/css/mock-views.css">
+    <title>Mock - Edycja Uzytkownika</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+</div>
+
+<div class="root">
+    <header class="header">
+        <p class="eyebrow">Mock View</p>
+        <h1>Edycja Uzytkownika</h1>
+        <p class="subtitle">Formularz makietowy dla frontendowych testow wygladu.</p>
+        <nav class="nav">
+            <a class="nav-chip" href="/projektList">Projekty</a>
+            <a class="nav-chip active" href="/userListMock">Uzytkownicy</a>
+            <a class="nav-chip" href="/taskListMock">Zadania</a>
+        </nav>
+    </header>
+
+    <section class="panel">
+        <form>
+            <div class="form-grid">
+                <div class="field">
+                    <label for="userId">ID</label>
+                    <input id="userId" type="text" value="2" readonly>
+                </div>
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input id="username" type="text" value="m.kowalski">
+                </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" value="m.kowalski@example.com">
+                </div>
+                <div class="field">
+                    <label for="role">Rola</label>
+                    <select id="role">
+                        <option>MANAGER</option>
+                        <option selected>DEV</option>
+                        <option>VIEWER</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="firstName">Imie</label>
+                    <input id="firstName" type="text" value="Marek">
+                </div>
+                <div class="field">
+                    <label for="lastName">Nazwisko</label>
+                    <input id="lastName" type="text" value="Kowalski">
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" type="button">Zapisz</button>
+                <button class="btn secondary" type="button">Anuluj</button>
+                <button class="btn danger" type="button">Usun</button>
+            </div>
+        </form>
+        <p class="note">Widok jest gotowy pod przyszle podpiecie modelu User.</p>
+    </section>
+</div>
+</body>
+</html>

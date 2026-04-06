@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/list-style.css}" rel="stylesheet" />
+    <title>Lista projektow</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="orb orb-left"></div>
+    <div class="orb orb-right"></div>
+</div>
+
+<div class="root">
+    <header class="hero">
+        <p class="eyebrow">Studio Zarzadzania</p>
+        <h1>Projekty</h1>
+        <p class="subtitle">Zobacz, tworz i aktualizuj projekty w jednym miejscu.</p>
+    </header>
+
+    <div class="top-panel">
+        <a class="btn" th:href="@{/projektEdit}">+ Nowy projekt</a>
+    </div>
+
+    <section class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="projekt : ${projekty}">
+                <td th:text="${projekt.projectId}">1</td>
+                <td th:text="${projekt.name}">Projekt</td>
+                <td>
+                    <a class="btn btn-secondary" th:href="@{/projektEdit(projektId=${projekt.projectId})}">Edytuj</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(projekty)}">
+                <td colspan="3" class="empty-state">Brak projektow.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+</body>
+</html>
