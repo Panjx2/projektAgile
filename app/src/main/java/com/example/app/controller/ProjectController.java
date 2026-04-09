@@ -2,9 +2,9 @@ package com.example.app.controller;
 
 import com.example.app.data.Project;
 import com.example.app.service.ProjectService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -22,8 +22,10 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<Project> getAllProjects() {
-        return projectService.getAllProjects();
+    public Page<Project> getProjects(
+            @RequestParam(required = false) String name,
+            Pageable pageable) {
+        return projectService.getProjects(name, pageable);
     }
 
     @GetMapping("/{id}")

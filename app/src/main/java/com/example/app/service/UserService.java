@@ -2,9 +2,9 @@ package com.example.app.service;
 
 import com.example.app.data.User;
 import com.example.app.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,5 +44,13 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public Page<User> getUsers(String username, Pageable pageable) {
+        if (username != null && !username.isEmpty()) {
+            return userRepository.findByUsernameContainingIgnoreCase(username, pageable);
+        }
+
+        return userRepository.findAll(pageable);
     }
 }

@@ -7,11 +7,11 @@ import com.example.app.data.User;
 import com.example.app.repository.ProjectRepository;
 import com.example.app.repository.TaskRepository;
 import com.example.app.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.app.specification.TaskSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class TaskService {
@@ -47,9 +47,19 @@ public class TaskService {
                 .orElseThrow();
     }
 
-    public List<Task> getTasksByProject(Long projectId) {
-        Project project = projectRepository.findById(projectId).orElseThrow();
-        return taskRepository.findByProject(project);
+    public Page<Task> getTasksByProject(Long projectId,
+                                        String name,
+                                        TaskStatus status,
+                                        String username,
+                                        Pageable pageable) {
+
+        Specification<Task> spec = Specification
+                .where(TaskSpecification.hasProjectId(projectId))
+                .and(TaskSpecification.hasName(name))
+                .and(TaskSpecification.hasStatus(status))
+                .and(TaskSpecification.hasAssignedUsername(username));
+
+        return taskRepository.findAll(spec, pageable);
     }
 
     public Task assignUser(Long taskId, Long userId) {
@@ -72,5 +82,18 @@ public class TaskService {
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public Page<Task> getTasksByUser(Long userId,
+                                     String name,
+                                     TaskStatus status,
+                                     Pageable pageable) {
+
+        Specification<Task> spec = Specification
+                .where(TaskSpecification.hasUserId(userId))
+                .and(TaskSpecification.hasName(name))
+                .and(TaskSpecification.hasStatus(status));
+
+        return taskRepository.findAll(spec, pageable);
     }
 }
