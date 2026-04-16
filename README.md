@@ -17,3 +17,11 @@ Z głównego katalogu projektu uruchom:
 
 ```bash
 docker compose up --build
+
+## Development mode
+
+Tryb developerski uruchamia aplikację bez przebudowywania obrazów Dockera po każdej zmianie w kodzie.
+
+Start:
+```bash
+docker compose -f docker-compose.dev.yml up
