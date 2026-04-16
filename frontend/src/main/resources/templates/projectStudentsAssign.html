@@ -1,0 +1,87 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- <link th:href="@{/css/mock-views.css}" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="../static/css/mock-views.css">
+
+    <title>Studenci - przypisanie do projektu</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+</div>
+
+<div class="root">
+    <header class="header">
+        <p class="eyebrow">Project Management</p>
+        <h1>Studenci projektu</h1>
+        <p class="subtitle" th:text="'Przypisywanie studentow do projektu: ' + ${projectName}">
+            Przypisywanie studentow do projektu: Projekt Demo
+        </p>
+        <nav class="nav">
+            <a class="nav-chip" th:href="@{/projekty}">Projekty</a>
+            <a class="nav-chip active" th:href="@{'/projekty/' + ${projectId} + '/studenci'}">Studenci</a>
+            <a class="nav-chip" th:href="@{/zadania}">Zadania</a>
+        </nav>
+    </header>
+
+    <section class="panel">
+        <form method="get" th:action="@{'/projekty/' + ${projectId} + '/studenci'}">
+            <div class="form-grid">
+                <div class="field full">
+                    <label for="q">Wyszukaj studenta</label>
+                    <input id="q" name="q" type="text" th:value="${q}" placeholder="imie, nazwisko, email, indeks">
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" type="submit">Szukaj</button>
+                <a class="btn secondary" th:href="@{'/projekty/' + ${projectId} + '/studenci'}">Wyczysc</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <form method="post" th:action="@{'/projekty/' + ${projectId} + '/studenci'}">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Dodaj</th>
+                        <th>Student</th>
+                        <th>Email</th>
+                        <th>Indeks</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(students)}">
+                        <td colspan="4">Brak studentow.</td>
+                    </tr>
+                    <tr th:each="s : ${students}">
+                        <td>
+                            <input type="checkbox"
+                                   name="selectedStudentIds"
+                                   th:value="${s.id}"
+                                   th:checked="${assignedStudentIds != null and assignedStudentIds.contains(s.id)}">
+                        </td>
+                        <td th:text="${s.fullName}">Jan Kowalski</td>
+                        <td th:text="${s.email}">jan.kowalski@uczelnia.pl</td>
+                        <td th:text="${s.indexNumber}">s12345</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="actions">
+                <button class="btn" type="submit">Zapisz przypisania</button>
+                <a class="btn secondary" th:href="@{/projekty}">Powrot do listy projektow</a>
+            </div>
+        </form>
+    </section>
+</div>
+</body>
+</html>
