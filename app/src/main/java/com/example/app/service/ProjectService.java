@@ -4,9 +4,9 @@ import com.example.app.data.Project;
 import com.example.app.data.User;
 import com.example.app.repository.ProjectRepository;
 import com.example.app.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -63,5 +63,15 @@ public class ProjectService {
         project.getUsers().remove(user);
 
         return projectRepository.save(project);
+    }
+
+
+    public Page<Project> getProjects(String name, Pageable pageable) {
+
+        if (name != null && !name.isEmpty()) {
+            return projectRepository.findByNameContainingIgnoreCase(name, pageable);
+        }
+
+        return projectRepository.findAll(pageable);
     }
 }
