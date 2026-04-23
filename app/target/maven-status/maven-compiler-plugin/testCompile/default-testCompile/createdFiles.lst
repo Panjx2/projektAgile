@@ -1,1 +1,4 @@
+com/example/app/ProjectServiceTest.class
 com/example/app/ProjectRepositoryTest.class
+com/example/app/TaskServiceTest.class
+com/example/app/UserServiceTest.class

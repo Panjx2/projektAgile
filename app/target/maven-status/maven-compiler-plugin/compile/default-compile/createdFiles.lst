@@ -5,9 +5,9 @@ com/example/app/repository/ProjectRepository.class
 com/example/app/repository/TaskRepository.class
 com/example/app/service/ProjectService.class
 com/example/app/data/FileEntity.class
+com/example/app/AppApplication.class
 com/example/app/controller/UserController.class
 com/example/app/repository/FileEntityRepository.class
-com/example/app/AppApplication.class
 com/example/app/data/TaskStatus.class
 com/example/app/controller/TaskController.class
 com/example/app/data/User.class
