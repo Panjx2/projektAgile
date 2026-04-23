@@ -73,10 +73,10 @@ public class MessageService {
     public static MessageDTO toDto(Message m) {
         return new MessageDTO(
                 m.getId(),
-                m.getSender().getUser_id(),
+                m.getSender().getId(),
                 m.getSender().getUsername(),
-                m.getReceiver() != null ? m.getReceiver().getUser_id(): null,
-                m.getProject() != null ? m.getProject().getProject_id() : null,
+                m.getReceiver() != null ? m.getReceiver().getId(): null,
+                m.getProject() != null ? m.getProject().getId() : null,
                 m.getContent(),
                 m.getType(),
                 m.getFile() != null ? m.getFile().getId() : null,

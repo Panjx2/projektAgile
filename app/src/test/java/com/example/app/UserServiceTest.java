@@ -36,7 +36,7 @@ class UserServiceTest {
     @Test
     void shouldUpdateUser() {
         User existing = new User();
-        existing.setUser_id(1L);
+        existing.setId(1L);
 
         User updated = new User();
         updated.setUsername("new");
