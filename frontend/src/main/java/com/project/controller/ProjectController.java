@@ -27,6 +27,16 @@ public class ProjectController {
         return "projectList";
     }
 
+    @GetMapping("/projektDetails")
+    public String projektDetails(@RequestParam(name = "projektId", required = false) Long projektId, Model model) {
+        if(projektId != null) {
+            model.addAttribute("projekt", projectService.getProjectById(projektId));
+        } else {
+            return "redirect:/projektList";
+        }
+        return "projektDetails";
+    }
+
     @GetMapping("/projectEdit")
     public String projectEdit(@RequestParam(name = "projectId", required = false) Long projectId, Model model) {
         if(projectId != null) {
