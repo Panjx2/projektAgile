@@ -1,9 +1,9 @@
 package com.example.app.controller;
 
+import com.example.app.dto.ProjectDto;
+import com.example.app.mapper.DtoMapper;
 import com.example.app.data.Project;
 import com.example.app.service.ProjectService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,31 +11,31 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final DtoMapper dtoMapper;
 
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, DtoMapper dtoMapper) {
         this.projectService = projectService;
+        this.dtoMapper = dtoMapper;
     }
 
     @PostMapping
-    public Project createProject(@RequestBody Project project) {
-        return projectService.createProject(project);
+    public ProjectDto createProject(@RequestBody ProjectDto projectDto) {
+        return dtoMapper.toDto(projectService.createProject(dtoMapper.toEntity(projectDto)));
     }
 
     @GetMapping
-    public Page<Project> getProjects(
-            @RequestParam(required = false) String name,
-            Pageable pageable) {
-        return projectService.getProjects(name, pageable);
+    public List<ProjectDto> getAllProjects() {
+        return projectService.getAllProjects().stream().map(dtoMapper::toDto).toList();
     }
 
     @GetMapping("/{id}")
-    public Project getProjectById(@PathVariable Long id) {
-        return projectService.getProjectById(id);
+    public ProjectDto getProjectById(@PathVariable Long id) {
+        return dtoMapper.toDto(projectService.getProjectById(id));
     }
 
     @PutMapping("/{id}")
-    public Project updateProject(@PathVariable Long id, @RequestBody Project project) {
-        return projectService.updateProject(id, project);
+    public ProjectDto updateProject(@PathVariable Long id, @RequestBody ProjectDto projectDto) {
+        return dtoMapper.toDto(projectService.updateProject(id, dtoMapper.toEntity(projectDto)));
     }
 
     @DeleteMapping("/{id}")
@@ -44,14 +44,14 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/users/{userId}")
-    public Project addUserToProject(@PathVariable Long projectId,
-                                    @PathVariable Long userId) {
-        return projectService.addUserToProject(projectId, userId);
+    public ProjectDto addUserToProject(@PathVariable Long projectId,
+                                       @PathVariable Long userId) {
+        return dtoMapper.toDto(projectService.addUserToProject(projectId, userId));
     }
 
     @DeleteMapping("/{projectId}/users/{userId}")
-    public Project removeUserFromProject(@PathVariable Long projectId,
-                                         @PathVariable Long userId) {
-        return projectService.removeUserFromProject(projectId, userId);
+    public ProjectDto removeUserFromProject(@PathVariable Long projectId,
+                                            @PathVariable Long userId) {
+        return dtoMapper.toDto(projectService.removeUserFromProject(projectId, userId));
     }
 }
