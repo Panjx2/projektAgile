@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/project-details.css">
+    <title>Detale Projektu</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="orb orb-left"></div>
+    <div class="orb orb-right"></div>
+</div>
+
+<div class="root">
+    <header class="hero">
+        <p class="eyebrow">Detale Projektu</p>
+        <h1 th:text="${projekt.name}">Nazwa Projektu</h1>
+        <p class="subtitle">Przeglądaj informacje i pliki projektu.</p>
+    </header>
+
+    <div class="back-nav">
+        <a class="btn-back" href="/projektList">← Powrót do listy</a>
+    </div>
+
+    <div class="details-container">
+        <!-- Sekcja Informacji o Projekcie -->
+        <section class="info-card">
+            <div class="card-header">
+                <h2>Informacje o Projekcie</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>ID Projektu</label>
+                    <p class="info-value" th:text="${projekt.projectId}">1</p>
+                </div>
+                <div class="info-item">
+                    <label>Nazwa</label>
+                    <p class="info-value" th:text="${projekt.name}">Nazwa Projektu</p>
+                </div>
+                <div class="info-item">
+                    <label>Status</label>
+                    <p class="info-value status" th:classappend="${'status-' + projekt.status}" th:text="${projekt.status}">ACTIVE</p>
+                </div>
+                <div class="info-item">
+                    <label>Data Rozpoczęcia</label>
+                    <p class="info-value" th:text="${#temporals.format(projekt.startDate, 'yyyy-MM-dd')}">2026-01-01</p>
+                </div>
+                <div class="info-item">
+                    <label>Data Zakończenia</label>
+                    <p class="info-value" th:text="${#temporals.format(projekt.endDate, 'yyyy-MM-dd')}">2026-12-31</p>
+                </div>
+                <div class="info-item">
+                    <label>Lider Projektu</label>
+                    <p class="info-value" th:text="${projekt.leaderName}">Jan Nowak</p>
+                </div>
+            </div>
+
+            <div class="description-section">
+                <label>Opis Projektu</label>
+                <div class="description-box" th:text="${projekt.description}">
+                    Opis projektu pojawi się tutaj...
+                </div>
+            </div>
+
+            <div class="actions-section">
+                <a class="btn btn-primary" th:href="@{/projektEdit(projektId=${projekt.projectId})}">Edytuj Projekt</a>
+                <a class="btn btn-secondary" href="/projektList">Powrót</a>
+            </div>
+        </section>
+
+        <!-- Sekcja Plików -->
+        <section class="files-card">
+            <div class="card-header">
+                <h2>Pliki Projektu</h2>
+                <span class="file-count" th:text="|${#lists.size(projekt.files)} plik(ów)|">0 plików</span>
+            </div>
+
+            <div class="files-list" th:if="${not #lists.isEmpty(projekt.files)}">
+                <div class="file-item" th:each="file : ${projekt.files}">
+                    <div class="file-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                            <polyline points="13 2 13 9 20 9"/>
+                        </svg>
+                    </div>
+                    <div class="file-info">
+                        <p class="file-name" th:text="${file.name}">dokument.pdf</p>
+                        <p class="file-meta">
+                            <span class="file-size" th:text="${#numbers.formatDecimal(file.size / 1024.0, 0, 'DEFAULT', 2)}">0</span> KB
+                            <span class="file-date" th:text="${'Dodany: ' + #temporals.format(file.uploadDate, 'yyyy-MM-dd HH:mm')}">Data</span>
+                        </p>
+                    </div>
+                    <div class="file-actions">
+                        <a class="btn-download" th:href="@{/api/projekty/{projektId}/files/{fileId}/download(projektId=${projekt.projectId}, fileId=${file.fileId})}"
+                           th:title="'Pobierz ' + ${file.name}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(projekt.files)}">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                    <polyline points="13 2 13 9 20 9"/>
+                </svg>
+                <p>Brak plików w tym projekcie</p>
+            </div>
+        </section>
+
+        <!-- Sekcja Zadań Projektu -->
+        <section class="tasks-card">
+            <div class="card-header">
+                <h2>Zadania w Projekcie</h2>
+                <span class="task-count" th:text="|${#lists.size(projekt.tasks)} zadań|">0 zadań</span>
+            </div>
+
+            <div class="tasks-list" th:if="${not #lists.isEmpty(projekt.tasks)}">
+                <div class="task-item" th:each="task : ${projekt.tasks}">
+                    <div class="task-header">
+                        <h3 th:text="${task.name}">Nazwa Zadania</h3>
+                        <span class="task-status" th:classappend="${'status-' + task.status}" th:text="${task.status}">TODO</span>
+                    </div>
+                    <div class="task-details">
+                        <span class="priority" th:classappend="${'priority-' + task.priority}" th:text="${task.priority}">HIGH</span>
+                        <span class="assigned" th:text="${'Przypisane: ' + task.assignedTo}">Przypisane: -</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(projekt.tasks)}">
+                <p>Brak zadań w tym projekcie</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    @keyframes drift {
+        0%, 100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(-30px) translateX(20px); }
+    }
+
+    @keyframes rise-in {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+</body>
+</html>

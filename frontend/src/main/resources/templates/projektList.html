@@ -41,6 +41,7 @@
                 <td th:text="${projekt.projectId}">1</td>
                 <td th:text="${projekt.name}">Projekt</td>
                 <td>
+                    <a class="btn btn-secondary" th:href="@{/projektDetails(projektId=${projekt.projectId})}">Detale</a>
                     <a class="btn btn-secondary" th:href="@{/projektEdit(projektId=${projekt.projectId})}">Edytuj</a>
                 </td>
             </tr>
