@@ -43,19 +43,19 @@ class ProjectServiceTest {
     @Test
     void shouldGetProjectById() {
         Project project = new Project();
-        project.setProject_id(1L);
+        project.setId(1L);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
 
         Project result = projectService.getProjectById(1L);
 
-        assertEquals(1L, result.getProject_id());
+        assertEquals(1L, result.getId());
     }
 
     @Test
     void shouldUpdateProject() {
         Project existing = new Project();
-        existing.setProject_id(1L);
+        existing.setId(1L);
         existing.setName("Old");
 
         Project updated = new Project();

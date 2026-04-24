@@ -1,13 +1,10 @@
 package com.example.app.controller;
 
-import com.example.app.data.FileEntity;
 import com.example.app.data.Project;
 import com.example.app.service.ProjectService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
