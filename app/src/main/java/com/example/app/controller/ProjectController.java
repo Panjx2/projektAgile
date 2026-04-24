@@ -2,10 +2,9 @@ package com.example.app.controller;
 
 import com.example.app.dto.ProjectDto;
 import com.example.app.mapper.DtoMapper;
+import com.example.app.data.Project;
 import com.example.app.service.ProjectService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")

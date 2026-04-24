@@ -21,6 +21,8 @@ import java.util.UUID;
 @Service
 public class FileService {
 
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
     private final FileEntityRepository fileRepository;
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
@@ -37,6 +39,9 @@ public class FileService {
 
     public FileEntity uploadToProject(Long projectId, MultipartFile file) throws IOException {
 
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new IllegalArgumentException("File too large");
+        }
         Project project = projectRepository.findById(projectId)
                 .orElseThrow();
 
@@ -55,7 +60,9 @@ public class FileService {
     }
 
     public FileEntity uploadToTask(Long taskId, MultipartFile file) throws IOException {
-
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new IllegalArgumentException("File too large");
+        }
         Task task = taskRepository.findById(taskId)
                 .orElseThrow();
 
