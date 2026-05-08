@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.service.ProjectService;
+import com.project.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,15 +17,17 @@ import com.project.model.Project;
 @Controller
 public class ProjectController {
     private final ProjectService projectService;
+    private final UserService userService;
 
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, UserService userService) {
         this.projectService = projectService;
+        this.userService = userService;
     }
 
-    @GetMapping("/projectList")
+    @GetMapping({"/", "/projectList", "/projektList"})
     public String projectList(Model model) {
         model.addAttribute("projekty", projectService.getAllProjects());
-        return "projectList";
+        return "projektList";
     }
 
     @GetMapping("/projektDetails")
@@ -32,7 +35,7 @@ public class ProjectController {
         if(projektId != null) {
             model.addAttribute("projekt", projectService.getProjectById(projektId));
         } else {
-            return "redirect:/projektList";
+            return "redirect:/projectList";
         }
         return "projektDetails";
     }
@@ -44,13 +47,13 @@ public class ProjectController {
         } else {
             model.addAttribute("project", new Project());
         }
-        return "projectEdit";
+        return "projektEdit";
     }
 
     @PostMapping(path = "/projectEdit")
     public String projectEditSave(@ModelAttribute @Valid Project project, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "projectEdit";
+            return "projektEdit";
         }
         try {
             if (project.getProjectId() == null) {
@@ -60,7 +63,7 @@ public class ProjectController {
             }
         } catch (HttpException e) {
             bindingResult.rejectValue(Strings.EMPTY, "http.error", e.getMessage());
-            return "projectEdit";
+            return "projektEdit";
         }
         return "redirect:/projectList";
     }
@@ -74,5 +77,52 @@ public class ProjectController {
     public String projectEditDelete(@ModelAttribute Project project) {
         projectService.deleteProject(project.getProjectId());
         return "redirect:/projectList";
+    }
+
+    @GetMapping("/projectUsers")
+    public String projectUsers(@RequestParam(name = "projectId", required = false) Long projectId, Model model) {
+        if (projectId == null) {
+            return "redirect:/projectList";
+        }
+        populateProjectUsers(model, projectId);
+        return "projectUsers";
+    }
+
+    @PostMapping(params = "addUser", path = "/projectUsers")
+    public String projectUsersAdd(@RequestParam Long projectId,
+                                  @RequestParam(required = false) Long userId,
+                                  Model model) {
+        if (userId == null) {
+            populateProjectUsers(model, projectId);
+            model.addAttribute("error", "Wybierz uzytkownika do dodania.");
+            return "projectUsers";
+        }
+        try {
+            projectService.addUserToProject(projectId, userId);
+        } catch (HttpException e) {
+            populateProjectUsers(model, projectId);
+            model.addAttribute("error", e.getMessage());
+            return "projectUsers";
+        }
+        return "redirect:/projectUsers?projectId=" + projectId;
+    }
+
+    @PostMapping(params = "removeUser", path = "/projectUsers")
+    public String projectUsersRemove(@RequestParam Long projectId,
+                                     @RequestParam Long userId,
+                                     Model model) {
+        try {
+            projectService.removeUserFromProject(projectId, userId);
+        } catch (HttpException e) {
+            populateProjectUsers(model, projectId);
+            model.addAttribute("error", e.getMessage());
+            return "projectUsers";
+        }
+        return "redirect:/projectUsers?projectId=" + projectId;
+    }
+
+    private void populateProjectUsers(Model model, Long projectId) {
+        model.addAttribute("project", projectService.getProjectById(projectId));
+        model.addAttribute("users", userService.getAllUsers());
     }
 }

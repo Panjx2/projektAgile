@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/edit-style.css}" rel="stylesheet" />
+    <title>Edycja uzytkownika</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="shape shape-left"></div>
+    <div class="shape shape-right"></div>
+</div>
+
+<div class="root" th:with="isDelete=${#strings.equalsIgnoreCase(param.delete, 'true')}">
+    <form th:action="@{/userEdit}"
+          th:object="${user}"
+          method="post"
+          th:with="akcja=*{user_id} ? (${isDelete} ? 'delete' : 'update') : 'create',
+                   opis=*{user_id} ? (${isDelete} ? 'Usun' : 'Aktualizuj') : 'Utworz'"
+          autocomplete="off">
+
+        <header class="form-header">
+            <p class="eyebrow">Panel Uzytkownika</p>
+            <h1 th:text="${opis} + ' uzytkownika'">Edytuj uzytkownika</h1>
+        </header>
+
+        <div class="err" th:if="${#fields.hasErrors('*')}">
+            BLEDY:
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Blad</li>
+            </ul>
+        </div>
+
+        <div class="container card">
+            <div class="btns-panel">
+                <button class="btn" type="submit" th:name="${akcja}" th:text="${opis}">Zapisz</button>
+                <button class="btn btn-muted" type="submit" name="cancel" value="true">Anuluj</button>
+            </div>
+
+            <div class="field-wrap" th:if="*{user_id != null}">
+                <label for="user_id" class="lbl">Id:</label>
+                <input id="user_id" th:field="*{user_id}" class="fld" readonly />
+            </div>
+
+            <div class="field-wrap">
+                <label for="username" class="lbl">Username:</label>
+                <input id="username" th:field="*{username}" class="fld" required />
+            </div>
+
+            <div class="field-wrap">
+                <label for="email" class="lbl">Email:</label>
+                <input id="email" th:field="*{email}" type="email" class="fld" required />
+            </div>
+
+            <div class="field-wrap">
+                <label for="firstName" class="lbl">Imie:</label>
+                <input id="firstName" th:field="*{firstName}" class="fld" required />
+            </div>
+
+            <div class="field-wrap">
+                <label for="lastName" class="lbl">Nazwisko:</label>
+                <input id="lastName" th:field="*{lastName}" class="fld" required />
+            </div>
+
+            <div class="field-wrap">
+                <label for="role" class="lbl">Rola:</label>
+                <input id="role" th:field="*{role}" class="fld" required />
+            </div>
+
+            <div class="field-wrap">
+                <label for="password" class="lbl">Haslo:</label>
+                <input id="password" th:field="*{password}" type="password" class="fld"
+                       th:required="*{user_id == null}" />
+            </div>
+
+            <div class="danger-panel" th:if="*{user_id != null}">
+                <button class="btn btn-danger" type="submit" name="delete" value="true">Usun</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

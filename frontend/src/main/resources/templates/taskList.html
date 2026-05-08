@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/list-style.css}" rel="stylesheet" />
+    <title>Zadania projektu</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="orb orb-left"></div>
+    <div class="orb orb-right"></div>
+</div>
+
+<div class="root">
+    <header class="hero">
+        <p class="eyebrow">Zadania</p>
+        <h1>Lista Zadan</h1>
+        <p class="subtitle">Zarzadzaj zadaniami w projekcie.</p>
+    </header>
+
+    <div class="back-nav" style="margin-bottom: 1rem;">
+        <a class="btn-back" th:href="@{/projectList}">← Powrot do projektow</a>
+    </div>
+
+    <div class="top-panel">
+        <a class="btn" th:href="@{/taskEdit(projectId=${projectId})}">+ Nowe zadanie</a>
+    </div>
+
+    <section class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Priorytet</th>
+                <th>Status</th>
+                <th>Przypisany</th>
+                <th>Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.taskId}">1</td>
+                <td th:text="${task.name}">Zadanie</td>
+                <td th:text="${task.priority}">HIGH</td>
+                <td th:text="${task.status}">TODO</td>
+                <td th:text="${task.assignedUser != null ? task.assignedUser.username : '-'}">-</td>
+                <td>
+                    <a class="btn btn-secondary" th:href="@{/taskEdit(taskId=${task.taskId}, projectId=${projectId})}">Edytuj</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(tasks)}">
+                <td colspan="6" class="empty-state">Brak zadan w tym projekcie.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+</body>
+</html>

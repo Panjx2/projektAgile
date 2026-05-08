@@ -15,8 +15,8 @@
 </div>
 
 <div class="root" th:with="isDelete=${#strings.equalsIgnoreCase(param.delete, 'true')}">
-  <form th:action="@{/projektEdit}"
-        th:object="${projekt}"
+  <form th:action="@{/projectEdit}"
+        th:object="${project}"
         method="post"
         th:with="akcja=*{projectId} ? (${isDelete} ? 'delete' : 'update') : 'create',
  opis=*{projectId} ? (${isDelete} ? 'Usun' : 'Aktualizuj') : 'Utworz'"

@@ -4,9 +4,9 @@ import com.example.app.data.TaskStatus;
 import com.example.app.dto.TaskDto;
 import com.example.app.mapper.DtoMapper;
 import com.example.app.service.TaskService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -32,8 +32,13 @@ public class TaskController {
     }
 
     @GetMapping("/project/{projectId}")
-    public List<TaskDto> getTasksByProject(@PathVariable Long projectId) {
-        return taskService.getTasksByProject(projectId).stream().map(dtoMapper::toDto).toList();
+    public Page<TaskDto> getTasksByProject(@PathVariable Long projectId,
+                                           @RequestParam(required = false) String name,
+                                           @RequestParam(required = false) TaskStatus status,
+                                           @RequestParam(required = false) String username,
+                                           Pageable pageable) {
+        return taskService.getTasksByProject(projectId, name, status, username, pageable)
+                .map(dtoMapper::toDto);
     }
 
     @PatchMapping("/{taskId}/assign/{userId}")

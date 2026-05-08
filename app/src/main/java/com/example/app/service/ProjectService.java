@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -50,6 +51,9 @@ public class ProjectService {
         Project project = getProjectById(projectId);
         User user = userRepository.findById(userId).orElseThrow();
 
+        if (project.getUsers() == null) {
+            project.setUsers(new HashSet<>());
+        }
         project.getUsers().add(user);
 
         return projectRepository.save(project);
