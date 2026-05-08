@@ -14,11 +14,11 @@ public class Task {
 
     private String name;
 
-    private String priority;
+    private TaskPriority priority;
 
     private TaskStatus status;
 
-    private User assignedUser;
+    private Long assignedUserId;
 
-    private Project project;
+    private Long projectId;
 }

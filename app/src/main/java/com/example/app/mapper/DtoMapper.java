@@ -8,6 +8,7 @@ import com.example.app.dto.TaskDto;
 import com.example.app.dto.UserDto;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Component
@@ -41,7 +42,12 @@ public class DtoMapper {
         dto.setProjectId(project.getId());
         dto.setName(project.getName());
         if (project.getUsers() != null) {
-            dto.setUsers(project.getUsers().stream().map(this::toDto).collect(Collectors.toSet()));
+            dto.setUserIds(
+                    project.getUsers()
+                            .stream()
+                            .map(User::getId)
+                            .collect(Collectors.toSet())
+            );
         }
         return dto;
     }
@@ -50,6 +56,7 @@ public class DtoMapper {
         Project project = new Project();
         project.setId(dto.getProjectId());
         project.setName(dto.getName());
+        project.setUsers(new HashSet<>());
         return project;
     }
 
@@ -60,10 +67,10 @@ public class DtoMapper {
         dto.setPriority(task.getPriority());
         dto.setStatus(task.getStatus());
         if (task.getAssignedUser() != null) {
-            dto.setAssignedUser(toDto(task.getAssignedUser()));
+            dto.setAssignedUserId(task.getAssignedUser().getId());
         }
         if (task.getProject() != null) {
-            dto.setProject(toDto(task.getProject()));
+            dto.setProjectId(task.getProject().getId());
         }
         return dto;
     }

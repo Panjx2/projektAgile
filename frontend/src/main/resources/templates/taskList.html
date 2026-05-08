@@ -46,9 +46,16 @@
             <tr th:each="task : ${tasks}">
                 <td th:text="${task.taskId}">1</td>
                 <td th:text="${task.name}">Zadanie</td>
-                <td th:text="${task.priority}">HIGH</td>
-                <td th:text="${task.status}">TODO</td>
-                <td th:text="${task.assignedUser != null ? task.assignedUser.username : '-'}">-</td>
+                <td th:text="${task.priority.getDisplayName()}">HIGH</td>
+                <td th:text="${task.status.getDisplayName()}">TODO</td>
+                <td>
+                    <span th:if="${task.assignedUserId == null}">-</span>
+
+                    <span th:each="u : ${users}"
+                          th:if="${u.getUser_id()== task.assignedUserId}"
+                          th:text="${u.username}">
+            </span>
+                </td>
                 <td>
                     <a class="btn btn-secondary" th:href="@{/taskEdit(taskId=${task.taskId}, projectId=${projectId})}">Edytuj</a>
                 </td>

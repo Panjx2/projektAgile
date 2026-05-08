@@ -1,14 +1,16 @@
 package com.project.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public enum TaskStatus {
-    @JsonProperty("TODO")
-    TODO,
+    TODO("do zrobienia"),
+    IN_PROGRESS("w toku"),
+    DONE("zrobione");
+    private final String displayName;
 
-    @JsonProperty("IN_PROGRESS")
-    IN_PROGRESS,
+    TaskStatus(String displayName) {
+        this.displayName = displayName;
+    }
 
-    @JsonProperty("DONE")
-    DONE
+    public String getDisplayName() {
+        return displayName;
+    }
 }

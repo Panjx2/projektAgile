@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.exception.HttpException;
 import com.project.model.Task;
+import com.project.model.TaskPriority;
 import com.project.model.TaskStatus;
 import com.project.service.TaskService;
 import com.project.service.UserService;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 @Controller
 public class TaskController {
 
@@ -27,6 +27,8 @@ public class TaskController {
         model.addAttribute("tasks", taskService.getTasksByProject(projectId));
         model.addAttribute("projectId", projectId);
         model.addAttribute("statuses", TaskStatus.values());
+        model.addAttribute("priorities", TaskPriority.values());
+        model.addAttribute("users", userService.getAllUsers());
         return "taskList";
     }
 
@@ -39,6 +41,7 @@ public class TaskController {
         } else {
             model.addAttribute("task", new Task());
         }
+        model.addAttribute("users", userService.getAllUsers());
         populateTaskForm(model, projectId);
         return "taskEdit";
     }
@@ -58,7 +61,8 @@ public class TaskController {
             if (task.getTaskId() == null) {
                 savedTask = taskService.createTask(projectId, task);
             } else {
-                savedTask = taskService.changeStatus(task.getTaskId(), task.getStatus());
+                taskService.changeStatus(task.getTaskId(), task.getStatus());
+                savedTask = taskService.changePriority(task.getTaskId(), task.getPriority());
             }
             if (assignedUserId != null) {
                 taskService.assignUser(savedTask.getTaskId(), assignedUserId);
@@ -85,6 +89,6 @@ public class TaskController {
     private void populateTaskForm(Model model, Long projectId) {
         model.addAttribute("projectId", projectId);
         model.addAttribute("statuses", TaskStatus.values());
-        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("priorities", TaskPriority.values());
     }
 }

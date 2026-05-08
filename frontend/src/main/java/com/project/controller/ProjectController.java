@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.service.ProjectService;
+import com.project.service.TaskService;
 import com.project.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -18,26 +19,30 @@ import com.project.model.Project;
 public class ProjectController {
     private final ProjectService projectService;
     private final UserService userService;
+    private final TaskService taskService;
 
-    public ProjectController(ProjectService projectService, UserService userService) {
+    public ProjectController(ProjectService projectService, UserService userService, TaskService taskService) {
         this.projectService = projectService;
         this.userService = userService;
+        this.taskService = taskService;
     }
 
-    @GetMapping({"/", "/projectList", "/projektList"})
+    @GetMapping({"/", "/projectList", "/projectList"})
     public String projectList(Model model) {
-        model.addAttribute("projekty", projectService.getAllProjects());
-        return "projektList";
+        model.addAttribute("projects", projectService.getAllProjects());
+        return "projectList";
     }
 
-    @GetMapping("/projektDetails")
-    public String projektDetails(@RequestParam(name = "projektId", required = false) Long projektId, Model model) {
-        if(projektId != null) {
-            model.addAttribute("projekt", projectService.getProjectById(projektId));
+    @GetMapping("/projectDetails")
+    public String projectDetails(@RequestParam(name = "projectId", required = false) Long projectId, Model model) {
+        if(projectId != null) {
+            model.addAttribute("project", projectService.getProjectById(projectId));
+            model.addAttribute("tasks",taskService.getTasksByProject(projectId));
+            model.addAttribute("users",userService.getAllUsers());
         } else {
             return "redirect:/projectList";
         }
-        return "projektDetails";
+        return "projectDetails";
     }
 
     @GetMapping("/projectEdit")
@@ -47,13 +52,13 @@ public class ProjectController {
         } else {
             model.addAttribute("project", new Project());
         }
-        return "projektEdit";
+        return "projectEdit";
     }
 
     @PostMapping(path = "/projectEdit")
     public String projectEditSave(@ModelAttribute @Valid Project project, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "projektEdit";
+            return "projectEdit";
         }
         try {
             if (project.getProjectId() == null) {
@@ -63,7 +68,7 @@ public class ProjectController {
             }
         } catch (HttpException e) {
             bindingResult.rejectValue(Strings.EMPTY, "http.error", e.getMessage());
-            return "projektEdit";
+            return "projectEdit";
         }
         return "redirect:/projectList";
     }

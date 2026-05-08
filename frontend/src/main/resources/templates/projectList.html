@@ -41,18 +41,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="projekt : ${projekty}">
-                <td th:text="${projekt.projectId}">1</td>
-                <td th:text="${projekt.name}">Projekt</td>
+            <tr th:each="project : ${projects}">
+                <td th:text="${project.projectId}">1</td>
+                <td th:text="${project.name}">Projekt</td>
                 <td>
-                    <a class="btn btn-secondary" th:href="@{/projektDetails(projektId=${projekt.projectId})}">Detale</a>
-                    <a class="btn btn-secondary" th:href="@{/taskList(projectId=${projekt.projectId})}">Zadania</a>
-                    <a class="btn btn-secondary" th:href="@{/projectEdit(projektId=${projekt.projectId})}">Edytuj</a>
-                    <a class="btn btn-secondary" th:href="@{/projectUsers(projectId=${projekt.projectId})}">Uzytkownicy</a>
+                    <a class="btn btn-secondary" th:href="@{/projectDetails(projectId=${project.projectId})}">Detale</a>
+                    <a class="btn btn-secondary" th:href="@{/taskList(projectId=${project.projectId})}">Zadania</a>
+                    <a class="btn btn-secondary" th:href="@{/projectEdit(projectId=${project.projectId})}">Edytuj</a>
+                    <a class="btn btn-secondary" th:href="@{/projectUsers(projectId=${project.projectId})}">Uzytkownicy</a>
                 </td>
             </tr>
-            <tr th:if="${#lists.isEmpty(projekty)}">
-                <td colspan="3" class="empty-state">Brak projektow.</td>
+            <tr th:if="${#lists.isEmpty(projects)}">
+                <td colspan="3" class="empty-state">Brak projektów.</td>
             </tr>
             </tbody>
         </table>

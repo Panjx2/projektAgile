@@ -1,5 +1,6 @@
 package com.example.app.controller;
 
+import com.example.app.data.TaskPriority;
 import com.example.app.data.TaskStatus;
 import com.example.app.dto.TaskDto;
 import com.example.app.mapper.DtoMapper;
@@ -36,8 +37,9 @@ public class TaskController {
                                            @RequestParam(required = false) String name,
                                            @RequestParam(required = false) TaskStatus status,
                                            @RequestParam(required = false) String username,
+                                           @RequestParam(required = false) TaskPriority priority,
                                            Pageable pageable) {
-        return taskService.getTasksByProject(projectId, name, status, username, pageable)
+        return taskService.getTasksByProject(projectId, name, status, username, priority, pageable)
                 .map(dtoMapper::toDto);
     }
 
@@ -51,6 +53,12 @@ public class TaskController {
     public TaskDto changeStatus(@PathVariable Long taskId,
                                 @RequestParam TaskStatus status) {
         return dtoMapper.toDto(taskService.changeStatus(taskId, status));
+    }
+
+    @PatchMapping("/{taskId}/priority")
+    public TaskDto changePriority(@PathVariable Long taskId,
+                                  @RequestParam TaskPriority priority) {
+        return dtoMapper.toDto(taskService.changePriority(taskId, priority));
     }
 
     @DeleteMapping("/{taskId}")

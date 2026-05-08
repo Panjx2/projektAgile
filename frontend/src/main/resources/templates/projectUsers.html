@@ -58,20 +58,25 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${project.users}">
-                <td th:text="${user.user_id}">1</td>
+            <tr th:each="user : ${users}"
+                th:if="${project.userIds.contains(user.getUser_id())}">
+                <td th:text="${user.getUser_id()}">1</td>
                 <td th:text="${user.username}">username</td>
                 <td th:text="${user.email}">email@example.com</td>
                 <td th:text="${user.role}">ROLE</td>
+
                 <td>
                     <form class="inline-form" th:action="@{/projectUsers}" method="post">
                         <input type="hidden" name="projectId" th:value="${project.projectId}" />
-                        <input type="hidden" name="userId" th:value="${user.user_id}" />
-                        <button class="btn btn-danger" type="submit" name="removeUser" value="true">Usun</button>
+                        <input type="hidden" name="userId" th:value="${user.getUser_id()}" />
+                        <button class="btn btn-danger" type="submit" name="removeUser" value="true">
+                            Usun
+                        </button>
                     </form>
                 </td>
             </tr>
-            <tr th:if="${project.users == null or #lists.isEmpty(project.users)}">
+
+            <tr th:if="${project.getUserIds() == null or #lists.isEmpty(project.getUserIds())}">
                 <td colspan="5" class="empty-state">Brak przypisanych uzytkownikow.</td>
             </tr>
             </tbody>

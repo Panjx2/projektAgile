@@ -53,28 +53,41 @@
 
             <div class="field-wrap">
                 <label for="priority" class="lbl">Priorytet:</label>
-                <input id="priority" th:field="*{priority}" class="fld"
-                       placeholder="LOW / MEDIUM / HIGH"
-                       th:readonly="*{taskId != null}" />
+                <select id="priority"
+                        th:field="*{priority}"
+                        class="fld"
+                        required>
+                    <option th:each="p : ${priorities}"
+                            th:value="${p}"
+                            th:text="${p.displayName}">
+                        Priorytet
+                    </option>
+                </select>
             </div>
 
             <div class="field-wrap">
                 <label for="status" class="lbl">Status:</label>
                 <select id="status" th:field="*{status}" class="fld">
-                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}">STATUS</option>
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.displayName}">STATUS</option>
                 </select>
             </div>
 
             <div class="field-wrap">
-                <label for="assignedUserId" class="lbl">Przypisany uzytkownik:</label>
+                <label for="assignedUserId" class="lbl">Przypisany użytkownik:</label>
+
                 <select id="assignedUserId" name="assignedUserId" class="fld">
-                    <option value="" th:text="*{taskId != null ? 'Bez zmian' : 'Nie przypisuj'}">Bez zmian</option>
-                    <option th:each="user : ${users}"
-                            th:value="${user.user_id}"
-                            th:text="${user.username}"
-                            th:selected="*{assignedUser != null && assignedUser.user_id == user.user_id}">
-                        username
+
+                    <option value=""
+                            th:text="${task.taskId != null ? 'Bez zmian' : 'Nie przypisuj'}">
+                        Bez zmian
                     </option>
+
+                    <option th:each="user : ${users}"
+                            th:value="${user.getUser_id()}"
+                            th:text="${user.username}"
+                            th:selected="${task.getAssignedUserId() != null and task.getAssignedUserId() == user.getUser_id()}">
+                    </option>
+
                 </select>
             </div>
 
