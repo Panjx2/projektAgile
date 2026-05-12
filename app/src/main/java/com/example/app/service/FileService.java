@@ -98,6 +98,11 @@ public class FileService {
     }
 
 
+    public FileEntity getFileById(Long fileId) {
+        return fileRepository.findById(fileId)
+                .orElseThrow(() -> new EntityNotFoundException("File not found: " + fileId));
+    }
+
     public byte[] downloadFile(Long fileId) throws Exception {
 
         FileEntity file = fileRepository.findById(fileId)

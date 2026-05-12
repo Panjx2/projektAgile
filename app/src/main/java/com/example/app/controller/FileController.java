@@ -54,10 +54,11 @@ public class FileController {
     @GetMapping("/{fileId}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId) throws Exception {
 
+        String fileName = fileService.getFileById(fileId).getName();
         byte[] data = fileService.downloadFile(fileId);
 
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=file")
+                .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
                 .body(data);
     }
 

@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.service.FileService;
 import com.project.service.ProjectService;
 import com.project.service.TaskService;
 import com.project.service.UserService;
@@ -20,11 +21,13 @@ public class ProjectController {
     private final ProjectService projectService;
     private final UserService userService;
     private final TaskService taskService;
+    private final FileService fileService;
 
-    public ProjectController(ProjectService projectService, UserService userService, TaskService taskService) {
+    public ProjectController(ProjectService projectService, UserService userService, TaskService taskService, FileService fileService) {
         this.projectService = projectService;
         this.userService = userService;
         this.taskService = taskService;
+        this.fileService = fileService;
     }
 
     @GetMapping({"/", "/projectList", "/projectList"})
@@ -37,8 +40,9 @@ public class ProjectController {
     public String projectDetails(@RequestParam(name = "projectId", required = false) Long projectId, Model model) {
         if(projectId != null) {
             model.addAttribute("project", projectService.getProjectById(projectId));
-            model.addAttribute("tasks",taskService.getTasksByProject(projectId));
-            model.addAttribute("users",userService.getAllUsers());
+            model.addAttribute("tasks", taskService.getTasksByProject(projectId));
+            model.addAttribute("users", userService.getAllUsers());
+            model.addAttribute("files", fileService.getFilesByProject(projectId));
         } else {
             return "redirect:/projectList";
         }
