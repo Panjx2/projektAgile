@@ -17,6 +17,7 @@ services:
   backend:
     build:
       context: ./app
+    image: projektagile-backend:1.0
     container_name: projektagile-backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/app
@@ -34,6 +35,7 @@ services:
   frontend:
     build:
       context: ./frontend
+    image: projektagile-frontend:1.0
     container_name: projektagile-frontend
     environment:
       REST_BASE_URL: http://backend:8080

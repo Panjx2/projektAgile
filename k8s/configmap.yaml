@@ -9,11 +9,8 @@ data:
 
   SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/app"
   SPRING_DATASOURCE_USERNAME: "postgres"
-  SPRING_DATASOURCE_PASSWORD: "postgres"
 
   SPRING_SECURITY_USER_NAME: "admin"
-  SPRING_SECURITY_USER_PASSWORD: "admin"
 
   REST_BASE_URL: "http://backend-service:8080"
   REST_USER_NAME: "admin"
-  REST_USER_PASSWORD: "admin"

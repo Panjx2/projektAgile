@@ -49,8 +49,8 @@ spec:
                   key: SPRING_DATASOURCE_USERNAME
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: app-config
+                secretKeyRef:
+                  name: app-secrets
                   key: SPRING_DATASOURCE_PASSWORD
             - name: SPRING_SECURITY_USER_NAME
               valueFrom:
@@ -59,6 +59,35 @@ spec:
                   key: SPRING_SECURITY_USER_NAME
             - name: SPRING_SECURITY_USER_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: app-config
+                secretKeyRef:
+                  name: app-secrets
                   key: SPRING_SECURITY_USER_PASSWORD
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "384Mi"
+            limits:
+              cpu: "1000m"
+              memory: "768Mi"
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            failureThreshold: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 3
