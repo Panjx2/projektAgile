@@ -34,6 +34,33 @@ docker compose -f docker-compose.dev.yml up
 
 ---
 
+## Skróty `make`
+
+Wszystkie typowe polecenia są zapięte w [Makefile](Makefile). Lista:
+
+```bash
+make help              # pokazuje wszystkie cele
+```
+
+Najczęściej używane:
+
+| Polecenie | Co robi |
+|---|---|
+| `make up` | Aplikuje manifesty (app + monitoring) |
+| `make down` | Usuwa wszystko |
+| `make reload` | Pełny cykl: `build` → `load` → `rollout` |
+| `make pods` | Status podów w obu namespace'ach |
+| `make logs-backend` | Tail logów backendu |
+| `make logs-prev` | Logi z poprzedniej (rozbitej) instancji |
+| `make psql` | psql w podzie postgresa |
+| `make db-reset` | Wyczyść schemat + restart backendu |
+| `make urls` | Wypisuje URL-e aplikacji i Grafany |
+| `make grafana` | Otwiera Grafanę |
+| `make forward-prometheus` | Port-forward Prometheusa na :9090 |
+| `make load-test` | Wysyła ruch w pętli na frontend |
+
+---
+
 ## Uruchomienie w Kubernetes (minikube)
 
 ### 1. Start klastra
