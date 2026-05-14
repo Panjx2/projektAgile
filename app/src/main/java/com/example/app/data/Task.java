@@ -18,7 +18,9 @@ public class Task {
     @Column(nullable = false)
     private String name;
 
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TaskPriority priority;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

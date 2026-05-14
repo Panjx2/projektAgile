@@ -7,10 +7,10 @@ import java.util.Set;
 
 @Data
 public class ProjectDto {
+
     @JsonProperty("project_id")
     private Long projectId;
 
     private String name;
-
-    private Set<UserDto> users;
+    private Set<Long> userIds;
 }

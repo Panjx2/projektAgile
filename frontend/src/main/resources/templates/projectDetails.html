@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/project-details.css}" rel="stylesheet" />
+    <title>Detale Projektu</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="orb orb-left"></div>
+    <div class="orb orb-right"></div>
+</div>
+
+<div class="root">
+    <header class="hero">
+        <p class="eyebrow">Detale Projektu</p>
+        <h1 th:text="${project.name}">Nazwa Projektu</h1>
+        <p class="subtitle">Przeglądaj informacje o projekcie.</p>
+    </header>
+
+    <div class="back-nav">
+        <a class="btn-back" th:href="@{/projectList}">← Powrót do listy</a>
+    </div>
+
+    <div class="details-container">
+
+        <section class="info-card">
+            <div class="card-header">
+                <h2>Informacje o Projekcie</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>ID Projektu</label>
+                    <p class="info-value" th:text="${project.projectId}">1</p>
+                </div>
+                <div class="info-item">
+                    <label>Nazwa</label>
+                    <p class="info-value" th:text="${project.name}">Nazwa</p>
+                </div>
+            </div>
+            <div class="actions-section">
+                <a class="btn btn-primary"
+                   th:href="@{/projectEdit(projectId=${project.projectId})}">
+                    Edytuj Projekt
+                </a>
+            </div>
+        </section>
+
+        <section class="info-card">
+            <div class="card-header">
+                <h2>Członkowie Projektu</h2>
+
+                <span th:text="${project.getUserIds() != null ? project.getUserIds().size() + ' osób' : '0 osób'}">
+                    0 osób
+                </span>
+            </div>
+
+            <div th:if="${project.getUserIds() != null and !#lists.isEmpty(project.getUserIds())}">
+
+                <div class="task-item"  th:each="user : ${users}"
+                     th:if="${project.userIds.contains(user.getUser_id())}">
+                    <div class="task-header">
+                        <h3 th:text="${user.firstName + ' ' + user.lastName}">
+                            Imię Nazwisko
+                        </h3>
+
+                        <span class="task-status" th:text="${user.role}">
+                            ROLE
+                        </span>
+                    </div>
+                    <div class="task-details">
+                        <span th:text="${user.email}">
+                            email
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="empty-state"
+                 th:if="${project.getUserIds() == null or #lists.isEmpty(project.getUserIds())}">
+                <p>Brak członków w tym projekcie</p>
+            </div>
+        </section>
+
+        <section class="tasks-card">
+            <div class="card-header">
+                <h2>Zadania w Projekcie</h2>
+
+                <span th:text="${project.getTaskIds() != null ? project.getTaskIds().size() + ' zadań' : '0 zadań'}">
+                    0 zadań
+                </span>
+            </div>
+
+            <div class="tasks-list" th:if="${tasks != null and !#lists.isEmpty(tasks)}">
+                <div class="task-item" th:each="task : ${tasks}">
+                    <div class="task-header">
+                        <h3 th:text="${task.name}">Nazwa zadania</h3>
+                        <span class="task-status" th:text="${task.status}">
+                STATUS
+            </span>
+                    </div>
+                    <div class="task-details">
+            <span class="priority" th:text="${task.priority}">
+                PRIORITY
+            </span>
+                        <span class="assigned"
+                              th:text="${task.assignedUserId != null ? 'Przypisane: ' + task.assignedUserId : 'Przypisane: -'}">
+                Przypisane: -
+            </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state"
+                 th:if="${tasks == null or #lists.isEmpty(tasks)}">
+                <p>Brak zadań w tym projekcie</p>
+            </div>
+        </section>
+
+    </div>
+</div>
+</body>
+</html>

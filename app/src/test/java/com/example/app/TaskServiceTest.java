@@ -78,7 +78,7 @@ class TaskServiceTest {
                 eq(pageable)
         )).thenReturn(page);
 
-        Page<Task> result = taskService.getTasksByUser(1L, null, null, pageable);
+        Page<Task> result = taskService.getTasksByUser(1L, null, null, null, pageable);
 
         assertEquals(1, result.getTotalElements());
     }

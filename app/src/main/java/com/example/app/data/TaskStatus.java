@@ -10,5 +10,7 @@ public enum TaskStatus {
         this.displayName = displayName;
     }
 
-    @Override public String toString() { return displayName;}
+    public String getDisplayName() {
+        return displayName;
+    }
 }

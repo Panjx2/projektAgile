@@ -4,10 +4,12 @@ import com.example.app.data.Project;
 import com.example.app.data.User;
 import com.example.app.repository.ProjectRepository;
 import com.example.app.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -45,14 +47,24 @@ public class ProjectService {
         projectRepository.deleteById(id);
     }
 
+    @Transactional
     public Project addUserToProject(Long projectId, Long userId) {
 
-        Project project = getProjectById(projectId);
+        Project project = projectRepository.findById(projectId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
 
-        project.getUsers().add(user);
+        if (project.getUsers() == null) {
+            project.setUsers(new HashSet<>());
+        }
 
-        return projectRepository.save(project);
+        if (user.getProjects() == null) {
+            user.setProjects(new HashSet<>());
+        }
+
+        project.getUsers().add(user);
+        user.getProjects().add(project);
+
+        return project;
     }
 
     public Project removeUserFromProject(Long projectId, Long userId) {

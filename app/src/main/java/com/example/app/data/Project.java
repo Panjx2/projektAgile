@@ -2,11 +2,16 @@ package com.example.app.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "projects")
 public class Project {
@@ -15,16 +20,15 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private Set<Task> tasks;
+    private Set<Task> tasks = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private Set<FileEntity> files;
+    private Set<FileEntity> files = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -32,5 +36,5 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 }

@@ -16,7 +16,7 @@ public class Project {
 
     private String name;
 
-    private Set<User> users;
+    private Set<Long> userIds;
 
-    private Set<Task> tasks;
+    private Set<Long> taskIds;
 }

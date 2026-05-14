@@ -1,17 +1,20 @@
 package com.example.app.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.app.data.TaskPriority;
 import com.example.app.data.TaskStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
 public class TaskDto {
+
     @JsonProperty("task_id")
     private Long taskId;
 
     private String name;
-    private String priority;
+    private TaskPriority priority;
     private TaskStatus status;
-    private UserDto assignedUser;
-    private ProjectDto project;
+
+    private Long assignedUserId;
+    private Long projectId;
 }

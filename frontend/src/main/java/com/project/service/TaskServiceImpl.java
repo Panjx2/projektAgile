@@ -1,6 +1,8 @@
 package com.project.service;
 
 import java.util.List;
+
+import com.project.model.TaskPriority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -61,13 +63,14 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getTasksByProject(Long projectId) {
         String resourcePath = String.format("%s/project/%d", getResourcePath(), projectId);
         logger.info("REQUEST -> GET {}", resourcePath);
-        return restClient.get()
+        RestResponsePage<Task> page = restClient.get()
                 .uri(resourcePath)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (req, res) -> {
                     throw new HttpException(res.getStatusCode(), res.getHeaders());
                 })
-                .body(new ParameterizedTypeReference<List<Task>>() {});
+                .body(new ParameterizedTypeReference<RestResponsePage<Task>>() {});
+        return page != null ? page.getContent() : List.of();
     }
 
     @Override
@@ -87,6 +90,25 @@ public class TaskServiceImpl implements TaskService {
     public Task changeStatus(Long taskId, TaskStatus status) {
         String resourcePath = String.format("%s/%d/status?status=%s", getResourcePath(), taskId, status.name());
         logger.info("REQUEST -> PATCH {}", resourcePath);
+        return restClient.patch()
+                .uri(resourcePath)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, res) -> {
+                    throw new HttpException(res.getStatusCode(), res.getHeaders());
+                })
+                .body(Task.class);
+    }
+
+    @Override
+    public Task changePriority(Long taskId, TaskPriority priority) {
+        String resourcePath =
+                String.format("%s/%d/priority?priority=%s",
+                        getResourcePath(),
+                        taskId,
+                        priority.name());
+
+        logger.info("REQUEST -> PATCH {}", resourcePath);
+
         return restClient.patch()
                 .uri(resourcePath)
                 .retrieve()

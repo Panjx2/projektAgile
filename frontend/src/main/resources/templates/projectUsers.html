@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/list-style.css}" rel="stylesheet" />
+    <title>Uzytkownicy projektu</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="orb orb-left"></div>
+    <div class="orb orb-right"></div>
+</div>
+
+<div class="root">
+    <header class="hero">
+        <p class="eyebrow">Studio Zarzadzania</p>
+        <h1>Uzytkownicy projektu</h1>
+        <p class="subtitle" th:text="${project.name}">Projekt</p>
+
+        <div class="back-nav">
+            <a class="btn-back" th:href="@{/projectList}">Powrot do projektow</a>
+        </div>
+    </header>
+
+    <div class="err" th:if="${error}" th:text="${error}">Blad</div>
+
+    <section class="table-card form-card">
+        <form class="assign-form" th:action="@{/projectUsers}" method="post">
+            <input type="hidden" name="projectId" th:value="${project.projectId}" />
+
+            <label class="sr-only" for="userId">Uzytkownik</label>
+            <select id="userId" name="userId" class="select-field">
+                <option value="">Wybierz uzytkownika</option>
+                <option th:each="user : ${users}"
+                        th:value="${user.user_id}"
+                        th:text="${user.username}">
+                    username
+                </option>
+            </select>
+
+            <button class="btn" type="submit" name="addUser" value="true">+ Dodaj uzytkownika</button>
+        </form>
+    </section>
+
+    <section class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Rola</th>
+                <th>Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}"
+                th:if="${project.userIds.contains(user.getUser_id())}">
+                <td th:text="${user.getUser_id()}">1</td>
+                <td th:text="${user.username}">username</td>
+                <td th:text="${user.email}">email@example.com</td>
+                <td th:text="${user.role}">ROLE</td>
+
+                <td>
+                    <form class="inline-form" th:action="@{/projectUsers}" method="post">
+                        <input type="hidden" name="projectId" th:value="${project.projectId}" />
+                        <input type="hidden" name="userId" th:value="${user.getUser_id()}" />
+                        <button class="btn btn-danger" type="submit" name="removeUser" value="true">
+                            Usun
+                        </button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr th:if="${project.getUserIds() == null or #lists.isEmpty(project.getUserIds())}">
+                <td colspan="5" class="empty-state">Brak przypisanych uzytkownikow.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.example.app.specification;
 
 import com.example.app.data.Task;
+import com.example.app.data.TaskPriority;
 import com.example.app.data.TaskStatus;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -18,6 +19,11 @@ public class TaskSpecification {
         return (root, query, cb) ->
                 status == null ? null :
                         cb.equal(root.get("status"), status);
+    }
+    public static Specification<Task> hasPriority(TaskPriority priority) {
+        return (root, query, cb) ->
+                priority == null ? null :
+                        cb.equal(root.get("priority"), priority);
     }
     public static Specification<Task> hasUserId(Long userId) {
         return (root, query, cb) ->

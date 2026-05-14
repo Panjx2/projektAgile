@@ -2,11 +2,16 @@ package com.example.app.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -36,7 +41,7 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     @JsonIgnore
-    private Set<Project> projects;
+    private Set<Project> projects = new HashSet<>();
 
     @OneToMany(mappedBy = "assignedUser")
     @JsonIgnore

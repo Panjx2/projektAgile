@@ -6,8 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-<!--    <link th:href="@{/css/list-style.css}" rel="stylesheet" />-->
-    <link rel="stylesheet" href="../static/css/list-style.css">
+    <link th:href="@{/css/list-style.css}" rel="stylesheet" />
     <title>Lista projektow</title>
 </head>
 <body>
@@ -23,8 +22,13 @@
         <p class="subtitle">Zobacz, tworz i aktualizuj projekty w jednym miejscu.</p>
     </header>
 
+    <nav class="nav">
+        <a class="nav-chip active" th:href="@{/projectList}">Projekty</a>
+        <a class="nav-chip" th:href="@{/userList}">Uzytkownicy</a>
+    </nav>
+
     <div class="top-panel">
-        <a class="btn" th:href="@{/projektEdit}">+ Nowy projekt</a>
+        <a class="btn" th:href="@{/projectEdit}">+ Nowy projekt</a>
     </div>
 
     <section class="table-card">
@@ -37,16 +41,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="projekt : ${projekty}">
-                <td th:text="${projekt.projectId}">1</td>
-                <td th:text="${projekt.name}">Projekt</td>
+            <tr th:each="project : ${projects}">
+                <td th:text="${project.projectId}">1</td>
+                <td th:text="${project.name}">Projekt</td>
                 <td>
-                    <a class="btn btn-secondary" th:href="@{/projektDetails(projektId=${projekt.projectId})}">Detale</a>
-                    <a class="btn btn-secondary" th:href="@{/projektEdit(projektId=${projekt.projectId})}">Edytuj</a>
+                    <a class="btn btn-secondary" th:href="@{/projectDetails(projectId=${project.projectId})}">Detale</a>
+                    <a class="btn btn-secondary" th:href="@{/taskList(projectId=${project.projectId})}">Zadania</a>
+                    <a class="btn btn-secondary" th:href="@{/projectEdit(projectId=${project.projectId})}">Edytuj</a>
+                    <a class="btn btn-secondary" th:href="@{/projectUsers(projectId=${project.projectId})}">Uzytkownicy</a>
                 </td>
             </tr>
-            <tr th:if="${#lists.isEmpty(projekty)}">
-                <td colspan="3" class="empty-state">Brak projektow.</td>
+            <tr th:if="${#lists.isEmpty(projects)}">
+                <td colspan="3" class="empty-state">Brak projektów.</td>
             </tr>
             </tbody>
         </table>
