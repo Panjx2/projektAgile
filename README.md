@@ -34,6 +34,160 @@ docker compose -f docker-compose.dev.yml up
 
 ---
 
+## Jak to odpalić — po ludzku
+
+Masz pięć opcji. Wybierz **jedną**, nie wszystkie naraz, bo się posypią.
+
+Po każdej z metod wchodzisz na **http://localhost:8081** w przeglądarce i logujesz się `admin` / `admin`.
+
+### Opcja 1: "Po prostu odpal" — najprostsze, nie ruszasz kodu
+
+```bash
+docker compose up --build
+```
+
+Robi się magia, czekasz 5 minut, wchodzisz w przeglądarce. Gotowe.
+
+Jak chcesz zatrzymać:
+```bash
+docker compose down            # wyłącz
+docker compose down -v         # wyłącz i wywal bazę danych
+```
+
+**Plus:** jedna komenda i działa.
+**Minus:** każda zmiana w kodzie wymaga drugiego `--build`, czeka kolejne 5 minut.
+
+---
+
+### Opcja 2: "Piszę kod, chcę szybko widzieć zmiany"
+
+```bash
+docker compose -f docker-compose.dev.yml up
+```
+
+Pierwsze uruchomienie jest wolne (~8 minut), bo ściąga sobie wszystkie biblioteki Mavena i Gradle'a. **Drugie i każde kolejne** już szybkie — i co najważniejsze, jak coś zmienisz w pliku `.java` w backendzie, to **samo się przeładuje** w kilka sekund. Frontend musisz zrestartować ręcznie (Ctrl-C i znowu komenda).
+
+**Plus:** zmiana → restart liczy się w sekundach.
+**Minus:** dużo RAM-u (~3 GB), bo dwie maszyny wirtualne Javy + postgres pakują się obok siebie.
+
+---
+
+### Opcja 3: "Chcę debugger i wszystko lokalnie"
+
+Potrzebujesz mieć zainstalowaną **Javę 21**. Sprawdzasz:
+```bash
+java -version
+```
+Jeśli pokazuje 21 — git. Jeśli nie — `sudo apt install openjdk-21-jdk` na Mincie/Ubuntu.
+
+**Krok 1:** Odpal samego postgresa w Dockerze (terminal 1, zostaw otwarty):
+```bash
+docker run -d --name pg-dev \
+  -p 5432:5432 \
+  -e POSTGRES_DB=app \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  postgres:16-alpine
+```
+
+**Krok 2:** Backend w drugim terminalu:
+```bash
+cd app
+./mvnw spring-boot:run
+```
+Czekasz ~70 sekund aż wypisze `Started AppApplication`.
+
+**Krok 3:** Frontend w trzecim terminalu:
+```bash
+cd frontend
+./gradlew bootRun
+```
+Czekasz aż wypisze `Started FrontendApplication`.
+
+**Krok 4:** Wchodzisz na http://localhost:8081.
+
+Jak skończysz:
+- Ctrl-C w terminalach 2 i 3
+- `docker stop pg-dev && docker rm pg-dev` jak chcesz całkiem posprzątać
+
+**Plus:** najmniej zasobów, najszybsza pętla, możesz wepchać breakpointy w IntelliJ.
+**Minus:** trzy terminale do pilnowania, musisz mieć lokalnie Javę.
+
+---
+
+### Opcja 4: "Klikam w IntelliJ i się odpala"
+
+To samo co Opcja 3, tylko zamiast `./mvnw spring-boot:run` i `./gradlew bootRun`:
+
+1. Otwórz IntelliJ → File → Open → wybierz folder `projektAgile`
+2. IntelliJ wykryje oba moduły (`app/` i `frontend/`)
+3. Znajdź klasę z `@SpringBootApplication`:
+   - W backendzie: `com.example.app.AppApplication`
+   - W frontendzie: główna klasa w `com.project`
+4. Kliknij prawym → **Run** (albo **Debug** jak chcesz breakpointy)
+5. Zrób to dla obu osobno
+
+Postgres dalej musi chodzić (`docker run` z Opcji 3, krok 1).
+
+**Plus:** debugger, hot reload, klikanie myszką.
+**Minus:** musisz raz spędzić 15 minut konfigurując IntelliJ.
+
+---
+
+### Opcja 5: "Chcę pobawić się w Kubernetes" — pełny zestaw
+
+Przejdź do sekcji [Uruchomienie w Kubernetes (minikube)](#uruchomienie-w-kubernetes-minikube) niżej. To **dużo** dodatkowej roboty (~20 min setup), sens ma tylko jak chcesz nauczyć się k8s, nie jak chcesz tylko odpalić aplikację.
+
+---
+
+### Która opcja dla kogo?
+
+| Sytuacja | Opcja |
+|---|---|
+| "Chcę zobaczyć jak to wygląda" | **1** |
+| "Będę dziś pisać kod" | **2** lub **3** |
+| "Chcę debugować, mam IDE" | **3** lub **4** |
+| "Pracuję nad backendem, frontend mi obojętny" | **3** (sam backend, frontend opcjonalnie) |
+| "Jest mi nudno, chcę zabaw" | **5** |
+
+---
+
+### Najczęstsze "ale czemu to nie działa?"
+
+**"Port already in use" / "Address already in use":**
+Coś już chodzi na 8080, 8081 albo 5432. Znajdź i zabij:
+```bash
+sudo lsof -i :8080         # zobacz co siedzi
+sudo kill <PID>            # zabij to
+```
+Najczęściej to poprzednie uruchomienie compose'a — `docker compose down`.
+
+**"Bad credentials" przy logowaniu:**
+Wywal bazę i odpal od nowa — pewnie zostały stare hasła z poprzedniego startu:
+```bash
+docker compose down -v     # to "-v" wywala wolumen z bazą
+docker compose up --build
+```
+
+**Backend startuje i od razu zdycha z "null value in column user_id":**
+Stary schemat w bazie. Tak samo:
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+**"Connection refused" frontend → backend:**
+Backend jeszcze nie wstał. Daj mu minutę i odśwież stronę. Jak po 2 minutach dalej, sprawdź:
+```bash
+curl http://localhost:8080/actuator/health/liveness
+```
+Powinno zwrócić `{"status":"UP"}`. Jak nie zwraca — patrz w logi backendu.
+
+**Wszystko gotowe ale strona nie ładuje się:**
+Sprawdź czy łazisz po dobrym adresie. **Frontend to 8081, NIE 8080.** 8080 to tylko API.
+
+---
+
 ## Skróty `make`
 
 Wszystkie typowe polecenia są zapięte w [Makefile](Makefile). Lista:
