@@ -1,0 +1,70 @@
+{{- if .Values.backend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "projektagile.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: {{ .Values.backend.port }}
+      targetPort: {{ .Values.backend.port }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "projektagile.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image }}:{{ .Values.backend.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.port }}
+          env:
+            - name: PORT
+              valueFrom: { configMapKeyRef: { name: app-config, key: PORT_BACKEND } }
+            - name: SPRING_DATASOURCE_URL
+              valueFrom: { configMapKeyRef: { name: app-config, key: SPRING_DATASOURCE_URL } }
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom: { configMapKeyRef: { name: app-config, key: SPRING_DATASOURCE_USERNAME } }
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom: { secretKeyRef: { name: app-secrets, key: SPRING_DATASOURCE_PASSWORD } }
+            - name: SPRING_SECURITY_USER_NAME
+              valueFrom: { configMapKeyRef: { name: app-config, key: SPRING_SECURITY_USER_NAME } }
+            - name: SPRING_SECURITY_USER_PASSWORD
+              valueFrom: { secretKeyRef: { name: app-secrets, key: SPRING_SECURITY_USER_PASSWORD } }
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+          startupProbe:
+            httpGet: { path: /actuator/health/liveness, port: {{ .Values.backend.port }} }
+            initialDelaySeconds: {{ .Values.backend.probes.startup.initialDelaySeconds }}
+            failureThreshold: {{ .Values.backend.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.backend.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.backend.probes.startup.timeoutSeconds }}
+          livenessProbe:
+            httpGet: { path: /actuator/health/liveness, port: {{ .Values.backend.port }} }
+            periodSeconds: {{ .Values.backend.probes.liveness.periodSeconds }}
+            failureThreshold: {{ .Values.backend.probes.liveness.failureThreshold }}
+            timeoutSeconds: {{ .Values.backend.probes.liveness.timeoutSeconds }}
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: {{ .Values.backend.port }} }
+            periodSeconds: {{ .Values.backend.probes.readiness.periodSeconds }}
+            failureThreshold: {{ .Values.backend.probes.readiness.failureThreshold }}
+            timeoutSeconds: {{ .Values.backend.probes.readiness.timeoutSeconds }}
+{{- end }}

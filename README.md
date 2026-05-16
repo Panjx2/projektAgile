@@ -161,3 +161,60 @@ minikube stop                  # zachowuje stan klastra
 # albo
 minikube delete                # kasuje wszystko
 ```
+
+---
+
+## Autoskalowanie (HPA)
+
+Backend i frontend mają zdefiniowany `HorizontalPodAutoscaler` w [k8s/hpa.yaml](k8s/hpa.yaml). HPA skaluje liczbę podów w zależności od CPU/RAM.
+
+```bash
+make metrics-server   # jednorazowo: włącz addon w minikube
+make hpa              # pokaż obecne metryki HPA
+make watch-scale      # śledź na żywo (terminal się odświeża)
+make stress           # uderz 50 równoległymi curlami żeby wywołać scale-up
+```
+
+Domyślne progi:
+- **backend**: 1–5 podów, scale przy 70% CPU lub 80% RAM
+- **frontend**: 1–3 pody, scale przy 70% CPU
+
+---
+
+## Helm chart
+
+Pełny stack można też zainstalować jako Helm chart z [charts/projektagile/](charts/projektagile/):
+
+```bash
+make helm-lint        # walidacja
+make helm-render      # podgląd wyrenderowanego YAML
+make helm-install     # instalacja / upgrade
+make helm-uninstall   # odinstalowanie
+```
+
+Parametry w [charts/projektagile/values.yaml](charts/projektagile/values.yaml) — można nadpisać przez `--set` lub własny `values-prod.yaml`:
+
+```bash
+helm upgrade --install projektagile charts/projektagile \
+  --set backend.replicas=3 \
+  --set credentials.dbPassword=tajne123
+```
+
+> Helm musi być zainstalowany. `sudo snap install helm --classic` lub instrukcja z [helm.sh/docs/intro/install](https://helm.sh/docs/intro/install/).
+
+---
+
+## ArgoCD (GitOps)
+
+ArgoCD śledzi repo i synchronizuje stan klastra z gałęzią `main`. Pushujesz YAML/chart do gita → klaster sam się aktualizuje.
+
+```bash
+make argocd-install       # jednorazowo: instaluje ArgoCD do namespace argocd
+make argocd-app           # rejestruje aplikację projektagile (z chartu z gita)
+make argocd-password      # pokaż hasło początkowe admina
+make argocd-ui            # port-forward na https://localhost:8080
+```
+
+W UI: zalogowane jako `admin` / hasło z `argocd-password`. Aplikacja `projektagile` pokaże się od razu i synchronizuje się automatycznie (`automated: prune+selfHeal`).
+
+Konfiguracja aplikacji w [argocd/application.yaml](argocd/application.yaml). Wskazuje na chart `charts/projektagile` na branchu `main`.

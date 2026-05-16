@@ -1,0 +1,66 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "projektagile.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: {{ .Values.frontend.port }}
+      targetPort: {{ .Values.frontend.port }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "projektagile.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image }}:{{ .Values.frontend.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
+          env:
+            - name: PORT
+              valueFrom: { configMapKeyRef: { name: app-config, key: PORT_FRONTEND } }
+            - name: REST_BASE_URL
+              valueFrom: { configMapKeyRef: { name: app-config, key: REST_BASE_URL } }
+            - name: REST_USER_NAME
+              valueFrom: { configMapKeyRef: { name: app-config, key: REST_USER_NAME } }
+            - name: REST_USER_PASSWORD
+              valueFrom: { secretKeyRef: { name: app-secrets, key: REST_USER_PASSWORD } }
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+          startupProbe:
+            httpGet: { path: /actuator/health/liveness, port: {{ .Values.frontend.port }} }
+            initialDelaySeconds: {{ .Values.frontend.probes.startup.initialDelaySeconds }}
+            failureThreshold: {{ .Values.frontend.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.frontend.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.frontend.probes.startup.timeoutSeconds }}
+          livenessProbe:
+            httpGet: { path: /actuator/health/liveness, port: {{ .Values.frontend.port }} }
+            periodSeconds: {{ .Values.frontend.probes.liveness.periodSeconds }}
+            failureThreshold: {{ .Values.frontend.probes.liveness.failureThreshold }}
+            timeoutSeconds: {{ .Values.frontend.probes.liveness.timeoutSeconds }}
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: {{ .Values.frontend.port }} }
+            periodSeconds: {{ .Values.frontend.probes.readiness.periodSeconds }}
+            failureThreshold: {{ .Values.frontend.probes.readiness.failureThreshold }}
+            timeoutSeconds: {{ .Values.frontend.probes.readiness.timeoutSeconds }}
+{{- end }}
