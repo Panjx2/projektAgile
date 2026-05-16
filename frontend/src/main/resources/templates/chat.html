@@ -156,13 +156,13 @@
     }
 
     const client = new StompJs.Client({
-        webSocketFactory: () => new SockJS(CHAT_CONFIG.restBaseUrl + '/ws'),
+        webSocketFactory: () => new SockJS(CHAT_CONFIG.wsPublicUrl + '/ws'),
         reconnectDelay: 3000,
         debug: () => {}
     });
 
     client.onConnect = function () {
-        console.log('[chat] connected', CHAT_CONFIG.restBaseUrl + '/ws');
+        console.log('[chat] connected', CHAT_CONFIG.wsPublicUrl + '/ws');
 
         if (CHAT_CONFIG.conversationType === 'private') {
             client.subscribe('/topic/user/' + CHAT_CONFIG.meId, function (frame) {
