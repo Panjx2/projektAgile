@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/chat-style.css}" rel="stylesheet" />
+    <title>Chat Zespolowy</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+</div>
+
+<div class="root">
+    <header class="header">
+        <p class="eyebrow">Studio Zarzadzania</p>
+        <h1>Chat Zespolowy</h1>
+        <p class="subtitle">Komunikuj sie z czlonkami zespolu w czasie rzeczywistym.</p>
+        <nav class="nav">
+            <a class="nav-chip" th:href="@{/projectList}">Projekty</a>
+            <a class="nav-chip" th:href="@{/userList}">Uzytkownicy</a>
+            <a class="nav-chip active" th:href="@{/chat}">Chat</a>
+        </nav>
+    </header>
+
+    <section class="chat-shell">
+        <aside class="threads-panel">
+            <div class="threads-top">
+                <strong>Konwersacje</strong>
+                <button class="btn-icon" type="button" aria-label="Nowa rozmowa">+</button>
+            </div>
+
+            <label class="search-wrap" for="chatSearch">
+                <input id="chatSearch" type="search" placeholder="Szukaj rozmowy...">
+            </label>
+
+            <div class="thread-list">
+                <button class="thread active" type="button">
+                    <span class="avatar">AK</span>
+                    <span class="thread-main">
+                        <span class="thread-topline">
+                            <strong>Anna Kowalska</strong>
+                            <span class="time">11:40</span>
+                        </span>
+                        <span class="preview">Jasne, wrzucam finalny widok za 15 min.</span>
+                    </span>
+                    <span class="unread">2</span>
+                </button>
+
+                <button class="thread" type="button">
+                    <span class="avatar alt">MN</span>
+                    <span class="thread-main">
+                        <span class="thread-topline">
+                            <strong>Michal Nowak</strong>
+                            <span class="time">10:12</span>
+                        </span>
+                        <span class="preview">Mozemy zsynchronizowac statusy taskow?</span>
+                    </span>
+                </button>
+
+                <button class="thread" type="button">
+                    <span class="avatar alt-2">FS</span>
+                    <span class="thread-main">
+                        <span class="thread-topline">
+                            <strong>Frontend Squad</strong>
+                            <span class="time">wczoraj</span>
+                        </span>
+                        <span class="preview">Nowy branch z poprawkami do review.</span>
+                    </span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="chat-panel">
+            <div class="chat-head">
+                <div class="chat-user">
+                    <span class="avatar">AK</span>
+                    <div>
+                        <strong>Anna Kowalska</strong>
+                        <p>online teraz</p>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="btn-icon" type="button" aria-label="Polaczenie">&#128222;</button>
+                    <button class="btn-icon" type="button" aria-label="Wiecej">&#8943;</button>
+                </div>
+            </div>
+
+            <div class="messages" aria-live="polite">
+                <div class="day-separator">Dzisiaj</div>
+
+                <div class="message in">
+                    <p>Hej! Jak stoimy z widokiem listy projektow?</p>
+                    <span>11:31</span>
+                </div>
+
+                <div class="message out">
+                    <p>Zrobione. Dorzucilem tez nowy ekran chatu pod mock.</p>
+                    <span>11:34</span>
+                </div>
+
+                <div class="message in">
+                    <p>Super. Podepniesz jeszcze nawigacje z zadan i uzytkownikow?</p>
+                    <span>11:35</span>
+                </div>
+
+                <div class="message out">
+                    <p>Tak, zrobione. Link jest w naglowku i z listy projektow.</p>
+                    <span>11:38</span>
+                </div>
+
+                <div class="message in">
+                    <p>Jasne, wrzucam finalny widok za 15 min.</p>
+                    <span>11:40</span>
+                </div>
+            </div>
+
+            <form class="composer" th:action="@{/chat}" method="post">
+                <button class="btn-icon" type="button" aria-label="Dodaj zalacznik">+</button>
+                <input type="text" name="message" placeholder="Napisz wiadomosc...">
+                <button class="send-btn" type="submit">Wyslij</button>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+</html>

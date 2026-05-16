@@ -96,6 +96,46 @@
             </div>
         </div>
     </form>
+
+    <div th:if="${task.taskId != null}" style="margin-top:28px;">
+        <div class="container card">
+            <div class="btns-panel">
+                <h2 style="margin:0; font-family:'Bricolage Grotesque',sans-serif; font-size:1.1rem; font-weight:700;">
+                    Pliki Zadania
+                </h2>
+            </div>
+
+            <div th:if="${taskFiles != null and !#lists.isEmpty(taskFiles)}">
+                <div th:each="file : ${taskFiles}"
+                     style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:rgba(255,255,255,0.5); border:1px solid var(--line); border-radius:8px; margin-bottom:8px; gap:12px;">
+                    <span style="font-weight:600; flex:1; word-break:break-word;" th:text="${file.name}">plik.pdf</span>
+                    <div style="display:flex; gap:8px; flex-shrink:0;">
+                        <a th:href="@{/files/{id}/download(id=${file.id})}"
+                           class="btn" style="padding:6px 14px; font-size:0.85rem; text-decoration:none;">Pobierz</a>
+                        <form th:action="@{/files/{id}/delete(id=${file.id})}" method="post" style="display:inline; margin:0;">
+                            <input type="hidden" name="taskId" th:value="${task.taskId}"/>
+                            <input type="hidden" name="taskProjectId" th:value="${projectId}"/>
+                            <button type="submit" class="btn btn-danger" style="padding:6px 14px; font-size:0.85rem;">Usuń</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${taskFiles == null or #lists.isEmpty(taskFiles)}"
+                 style="text-align:center; padding:20px; color:var(--muted);">
+                <p style="margin:0;">Brak plików w tym zadaniu</p>
+            </div>
+
+            <form th:action="@{/files/task/{id}(id=${task.taskId})}" method="post" enctype="multipart/form-data"
+                  style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line);">
+                <input type="hidden" name="projectId" th:value="${projectId}"/>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <input type="file" name="file" required class="fld" style="flex:1; min-width:200px;"/>
+                    <button type="submit" class="btn" style="margin:0;">Dodaj plik</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

@@ -87,6 +87,58 @@
             </div>
         </section>
 
+        <section class="files-card">
+            <div class="card-header">
+                <h2>Pliki Projektu</h2>
+                <span class="file-count" th:text="${files != null ? files.size() + ' plików' : '0 plików'}">0 plików</span>
+            </div>
+
+            <div class="files-list" th:if="${files != null and !#lists.isEmpty(files)}">
+                <div class="file-item" th:each="file : ${files}">
+                    <div class="file-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="file-info">
+                        <p class="file-name" th:text="${file.name}">nazwa-pliku.pdf</p>
+                    </div>
+                    <div class="file-actions" style="display:flex; gap:8px;">
+                        <a class="btn-download" th:href="@{/files/{id}/download(id=${file.id})}" title="Pobierz">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                        </a>
+                        <form th:action="@{/files/{id}/delete(id=${file.id})}" method="post" style="display:inline;">
+                            <input type="hidden" name="projectId" th:value="${project.projectId}"/>
+                            <button type="submit" class="btn-download" style="background:var(--danger);" title="Usuń">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" th:if="${files == null or #lists.isEmpty(files)}">
+                <p>Brak plików w tym projekcie</p>
+            </div>
+
+            <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--line);">
+                <form th:action="@{/files/project/{id}(id=${project.projectId})}" method="post" enctype="multipart/form-data">
+                    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                        <input type="file" name="file" required
+                               style="flex:1; min-width:200px; padding:8px 12px; border:1px solid var(--line); border-radius:8px; font-size:0.95rem;"/>
+                        <button type="submit" class="btn btn-primary">Dodaj plik</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
         <section class="tasks-card">
             <div class="card-header">
                 <h2>Zadania w Projekcie</h2>

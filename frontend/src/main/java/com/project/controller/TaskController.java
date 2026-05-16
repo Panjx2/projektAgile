@@ -4,6 +4,7 @@ import com.project.exception.HttpException;
 import com.project.model.Task;
 import com.project.model.TaskPriority;
 import com.project.model.TaskStatus;
+import com.project.service.FileService;
 import com.project.service.TaskService;
 import com.project.service.UserService;
 import org.apache.logging.log4j.util.Strings;
@@ -16,10 +17,12 @@ public class TaskController {
 
     private final TaskService taskService;
     private final UserService userService;
+    private final FileService fileService;
 
-    public TaskController(TaskService taskService, UserService userService) {
+    public TaskController(TaskService taskService, UserService userService, FileService fileService) {
         this.taskService = taskService;
         this.userService = userService;
+        this.fileService = fileService;
     }
 
     @GetMapping("/taskList")
@@ -38,6 +41,7 @@ public class TaskController {
                            Model model) {
         if (taskId != null) {
             model.addAttribute("task", taskService.getTaskById(taskId));
+            model.addAttribute("taskFiles", fileService.getFilesByTask(taskId));
         } else {
             model.addAttribute("task", new Task());
         }
