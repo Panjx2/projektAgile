@@ -1,0 +1,92 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- <link th:href="@{/css/mock-views.css}" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="../static/css/mock-views.css">
+    <title>Mock - Nowy Projekt</title>
+</head>
+<body>
+<div class="page-bg" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+</div>
+
+<div class="root">
+    <header class="header">
+        <p class="eyebrow">Mock View</p>
+        <h1>Nowy Projekt</h1>
+        <p class="subtitle">Przyklad formularza tworzenia projektu bez integracji backend.</p>
+        <nav class="nav">
+            <a class="nav-chip active" href="/projektListMock">Projekty</a>
+            <a class="nav-chip" href="/userListMock">Uzytkownicy</a>
+            <a class="nav-chip" href="/taskListMock">Zadania</a>
+        </nav>
+    </header>
+
+    <section class="panel">
+        <!-- Przy integracji: dodac th:action="@{/projectCreate}" th:object="${project}" method="post" -->
+        <form>
+            <div class="form-grid">
+
+                <div class="field full">
+                    <label for="name">Nazwa projektu</label>
+                    <!-- Przy integracji: th:field="*{name}" -->
+                    <input id="name" name="name" type="text" placeholder="Podaj nazwe projektu">
+                </div>
+
+                <div class="field">
+                    <label for="owner">Wlasciciel</label>
+                    <!-- Przy integracji: th:field="*{owner}" -->
+                    <select id="owner" name="owner">
+                        <option value="" selected disabled>Wybierz wlasciciela</option>
+                        <option>anna.nowak</option>
+                        <option>m.kowalski</option>
+                        <option>test.viewer</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="status">Status</label>
+                    <!-- Przy integracji: th:field="*{status}" -->
+                    <select id="status" name="status">
+                        <option value="" selected disabled>Wybierz status</option>
+                        <option>PLANNED</option>
+                        <option>IN_PROGRESS</option>
+                        <option>COMPLETED</option>
+                        <option>ON_HOLD</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="startDate">Data startu</label>
+                    <!-- Przy integracji: th:field="*{startDate}" -->
+                    <input id="startDate" name="startDate" type="date">
+                </div>
+
+                <div class="field">
+                    <label for="endDate">Data zakonczenia</label>
+                    <!-- Przy integracji: th:field="*{endDate}" -->
+                    <input id="endDate" name="endDate" type="date">
+                </div>
+
+                <div class="field full">
+                    <label for="description">Opis</label>
+                    <!-- Przy integracji: th:field="*{description}" -->
+                    <textarea id="description" name="description" rows="4" placeholder="Opisz projekt..."></textarea>
+                </div>
+
+            </div>
+
+            <div class="actions">
+                <button class="btn" type="button">Dodaj projekt</button>
+                <button class="btn secondary" type="button">Anuluj</button>
+            </div>
+        </form>
+    </section>
+</div>
+</body>
+</html>
