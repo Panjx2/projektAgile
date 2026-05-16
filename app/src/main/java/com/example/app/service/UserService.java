@@ -29,6 +29,10 @@ public class UserService {
         return userRepository.findById(id).orElseThrow();
     }
 
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow();
+    }
+
     public User updateUser(Long id, User updated) {
 
         User user = getUserById(id);

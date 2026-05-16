@@ -10,6 +10,7 @@ import com.example.app.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class MessageService {
@@ -69,6 +70,16 @@ public class MessageService {
         return toDto(saved);
     }
 
+
+    public List<MessageDTO> getPrivateConversation(Long userA, Long userB) {
+        return messageRepository.findPrivateConversation(userA, userB)
+                .stream().map(MessageService::toDto).toList();
+    }
+
+    public List<MessageDTO> getProjectMessages(Long projectId) {
+        return messageRepository.findByProjectIdOrderByCreatedAtAsc(projectId)
+                .stream().map(MessageService::toDto).toList();
+    }
 
     public static MessageDTO toDto(Message m) {
         return new MessageDTO(
