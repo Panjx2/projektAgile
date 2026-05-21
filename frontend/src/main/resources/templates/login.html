@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap"
+          rel="stylesheet">
+
+    <link th:href="@{/css/edit-style.css}" rel="stylesheet" />
+
+    <title>Zaloguj się</title>
+</head>
+<body>
+
+<div class="page-bg" aria-hidden="true">
+    <div class="shape shape-left"></div>
+    <div class="shape shape-right"></div>
+</div>
+
+<div class="root">
+
+    <form th:action="@{/login}" method="post" autocomplete="off">
+
+        <header class="form-header">
+            <p class="eyebrow">System Autoryzacji</p>
+            <h1>Logowanie</h1>
+        </header>
+
+        <div class="err" th:if="${param.error}">
+            Niepoprawny login lub hasło
+        </div>
+
+        <div class="msg" th:if="${param.logout}">
+            Wylogowano pomyślnie
+        </div>
+
+        <div class="container card">
+
+            <div class="field-wrap">
+                <label for="username" class="lbl">Username:</label>
+                <input id="username"
+                       name="username"
+                       class="fld"
+                       required />
+            </div>
+
+            <div class="field-wrap">
+                <label for="password" class="lbl">Hasło:</label>
+                <input id="password"
+                       name="password"
+                       type="password"
+                       class="fld"
+                       required />
+            </div>
+
+            <div class="btns-panel">
+                <button class="btn" type="submit">
+                    Zaloguj
+                </button>
+
+                <a th:href="@{/register}" class="btn btn-muted">
+                    Rejestracja
+                </a>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

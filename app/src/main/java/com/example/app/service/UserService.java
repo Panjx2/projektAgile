@@ -53,4 +53,12 @@ public class UserService {
 
         return userRepository.findAll(pageable);
     }
+
+    public boolean validateUsername(String username){
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean validateEmail(String email){
+        return userRepository.existsByEmail(email);
+    }
 }
