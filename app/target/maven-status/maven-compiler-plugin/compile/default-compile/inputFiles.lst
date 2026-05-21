@@ -2,6 +2,7 @@
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/main/java/com/example/app/config/WebSocketConfig.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/main/java/com/example/app/controller/ChatController.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/main/java/com/example/app/controller/FileController.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/main/java/com/example/app/controller/GlobalExceptionHandler.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/main/java/com/example/app/controller/ProjectController.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/main/java/com/example/app/controller/TaskController.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/main/java/com/example/app/controller/UserController.java
