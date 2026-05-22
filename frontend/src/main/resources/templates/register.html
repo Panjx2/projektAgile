@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap"
+          rel="stylesheet">
+
+    <link th:href="@{/css/edit-style.css}" rel="stylesheet"/>
+
+    <title>Rejestracja</title>
+</head>
+<body>
+
+<div class="page-bg" aria-hidden="true">
+    <div class="shape shape-left"></div>
+    <div class="shape shape-right"></div>
+</div>
+
+<div class="root">
+
+    <form th:action="@{/register}"
+          th:object="${user}"
+          method="post"
+          id="registerForm"
+          autocomplete="off">
+
+        <header class="form-header">
+            <p class="eyebrow">System Autoryzacji</p>
+            <h1>Rejestracja</h1>
+        </header>
+
+        <div class="err" th:if="${#fields.hasErrors('*')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}"
+                    th:text="${err}">
+                </li>
+            </ul>
+        </div>
+
+        <div class="container card">
+
+            <div class="field-wrap">
+                <label for="username" class="lbl">Username:</label>
+
+                <input id="username"
+                       th:field="*{username}"
+                       class="fld"
+                       required />
+
+                <small id="usernameMsg" class="msg-text"></small>
+            </div>
+
+            <div class="field-wrap">
+                <label for="email" class="lbl">Email:</label>
+
+                <input id="email"
+                       th:field="*{email}"
+                       type="email"
+                       class="fld"
+                       required />
+
+                <small id="emailMsg" class="msg-text"></small>
+            </div>
+
+            <div class="field-wrap">
+                <label for="firstName" class="lbl">Imię:</label>
+
+                <input id="firstName"
+                       th:field="*{firstName}"
+                       class="fld"
+                       required />
+            </div>
+
+            <div class="field-wrap">
+                <label for="lastName" class="lbl">Nazwisko:</label>
+
+                <input id="lastName"
+                       th:field="*{lastName}"
+                       class="fld"
+                       required />
+            </div>
+
+            <div class="field-wrap">
+                <label for="password" class="lbl">Hasło:</label>
+
+                <input id="password"
+                       th:field="*{password}"
+                       type="password"
+                       class="fld"
+                       required />
+
+                <small id="passwordMsg" class="msg-text"></small>
+            </div>
+
+            <div class="field-wrap">
+                <label for="repeatPassword" class="lbl">
+                    Powtórz hasło:
+                </label>
+
+                <input id="repeatPassword"
+                       name="repeatPassword"
+                       type="password"
+                       class="fld"
+                       required />
+
+                <small id="repeatPasswordMsg" class="msg-text"></small>
+            </div>
+
+            <div class="btns-panel">
+
+                <button class="btn"
+                        id="submitBtn"
+                        type="submit">
+
+                    Utwórz konto
+                </button>
+
+                <a th:href="@{/}" class="btn btn-muted">
+                    Wróć
+                </a>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+
+    const password = document.getElementById('password');
+    const repeatPassword = document.getElementById('repeatPassword');
+
+    const passwordMsg = document.getElementById('passwordMsg');
+    const repeatPasswordMsg = document.getElementById('repeatPasswordMsg');
+
+    const username = document.getElementById('username');
+    const usernameMsg = document.getElementById('usernameMsg');
+
+    const email = document.getElementById('email');
+    const emailMsg = document.getElementById('emailMsg');
+
+    const submitBtn = document.getElementById('submitBtn');
+
+    let usernameValid = false;
+    let emailValid = false;
+    let passwordValid = false;
+    let repeatValid = false;
+
+    function validateForm() {
+        submitBtn.disabled =
+            !(usernameValid && emailValid && passwordValid && repeatValid);
+    }
+
+    password.addEventListener('input', () => {
+
+        if(password.value.length < 6) {
+            passwordMsg.innerText =
+                'Hasło musi mieć minimum 6 znaków';
+            passwordMsg.className = 'msg-text err-text';
+            passwordValid = false;
+        }
+        else {
+            passwordMsg.innerText = 'Hasło poprawne';
+            passwordMsg.className = 'msg-text ok-text';
+            passwordValid = true;
+        }
+
+        validateRepeatPassword();
+        validateForm();
+    });
+
+    repeatPassword.addEventListener('input', () => {
+        validateRepeatPassword();
+        validateForm();
+    });
+
+    function validateRepeatPassword() {
+
+        if(password.value !== repeatPassword.value) {
+            repeatPasswordMsg.innerText =
+                'Hasła nie są takie same';
+
+            repeatPasswordMsg.className =
+                'msg-text err-text';
+
+            repeatValid = false;
+        }
+        else {
+            repeatPasswordMsg.innerText =
+                'Hasła są zgodne';
+
+            repeatPasswordMsg.className =
+                'msg-text ok-text';
+
+            repeatValid = true;
+        }
+    }
+
+    username.addEventListener('blur', async () => {
+
+        const response =
+            await fetch('/api/users/validate-username?username='
+                + username.value);
+
+        const exists = await response.json();
+
+        if(exists) {
+            usernameMsg.innerText =
+                'Username jest zajęty';
+
+            usernameMsg.className =
+                'msg-text err-text';
+
+            usernameValid = false;
+        }
+        else {
+            usernameMsg.innerText =
+                'Username dostępny';
+
+            usernameMsg.className =
+                'msg-text ok-text';
+
+            usernameValid = true;
+        }
+
+        validateForm();
+    });
+
+    email.addEventListener('blur', async () => {
+
+        const response =
+            await fetch('/api/users/validate-email?email='
+                + encodeURIComponent(email.value));
+
+        const exists = await response.json();
+
+        if(exists) {
+            emailMsg.innerText =
+                'Email już istnieje';
+
+            emailMsg.className =
+                'msg-text err-text';
+
+            emailValid = false;
+        }
+        else {
+            emailMsg.innerText =
+                'Email dostępny';
+
+            emailMsg.className =
+                'msg-text ok-text';
+
+            emailValid = true;
+        }
+
+        validateForm();
+    });
+
+</script>
+
+</body>
+</html>

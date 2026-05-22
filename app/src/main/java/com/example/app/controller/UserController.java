@@ -53,4 +53,18 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
+
+    @GetMapping("/validate-username")
+    public boolean validateUsername(
+            @RequestParam String username) {
+
+        return userService.validateUsername(username);
+    }
+
+    @GetMapping("/validate-email")
+    public boolean validateEmail(
+            @RequestParam String email) {
+        return userService.validateEmail(email);
+    }
+
 }
