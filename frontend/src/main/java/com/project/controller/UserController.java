@@ -62,4 +62,16 @@ public class UserController {
         userService.deleteUser(user.getUser_id());
         return "redirect:/userList";
     }
+
+    @GetMapping("/register")
+    public String registerForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
 }
