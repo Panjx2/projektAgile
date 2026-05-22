@@ -56,6 +56,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getCurrentUser() {
+        String resourcePath = getResourcePath() + "/me";
+        logger.info("REQUEST -> GET {}", resourcePath);
+        return restClient.get()
+                .uri(resourcePath)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, res) -> {
+                    throw new HttpException(res.getStatusCode(), res.getHeaders());
+                })
+                .body(User.class);
+    }
+
+    @Override
     public User getUserById(Long id) {
         String resourcePath = getResourcePath(id);
         logger.info("REQUEST -> GET {}", resourcePath);

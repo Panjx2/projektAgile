@@ -18,28 +18,18 @@ public class ChatController {
         this.messageService = messageService;
     }
 
-
     @MessageMapping("/chat.private")
     public void sendPrivate(MessageDTO message) {
-
         MessageDTO saved = messageService.savePrivateMessage(message);
-
-        messagingTemplate.convertAndSendToUser(
-                saved.receiverId().toString(),
-                "/queue/messages",
-                saved
-        );
+        messagingTemplate.convertAndSend("/topic/user/" + saved.receiverId(), saved);
+        if (!saved.receiverId().equals(saved.senderId())) {
+            messagingTemplate.convertAndSend("/topic/user/" + saved.senderId(), saved);
+        }
     }
-
 
     @MessageMapping("/chat.project")
     public void sendToProject(MessageDTO message) {
-
         MessageDTO saved = messageService.saveProjectMessage(message);
-
-        messagingTemplate.convertAndSend(
-                "/topic/project/" + saved.projectId(),
-                saved
-        );
+        messagingTemplate.convertAndSend("/topic/project/" + saved.projectId(), saved);
     }
 }

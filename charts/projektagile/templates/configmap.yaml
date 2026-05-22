@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "projektagile.labels" . | nindent 4 }}
+data:
+  PORT_BACKEND: "{{ .Values.backend.port }}"
+  PORT_FRONTEND: "{{ .Values.frontend.port }}"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}"
+  SPRING_DATASOURCE_USERNAME: "{{ .Values.credentials.dbUser }}"
+  SPRING_SECURITY_USER_NAME: "{{ .Values.credentials.adminUser }}"
+  REST_BASE_URL: "http://backend-service:{{ .Values.backend.port }}"
+  REST_USER_NAME: "{{ .Values.credentials.restUser }}"

@@ -102,10 +102,59 @@ db-reset: ## Drop and recreate public schema (wipes all data), then restart back
 	kubectl rollout restart deployment/backend -n $(NS)
 	kubectl rollout status deployment/backend -n $(NS) --timeout=300s
 
+## --- helm ---
+
+helm-lint: ## Lint the Helm chart
+	helm lint charts/projektagile
+
+helm-render: ## Render the Helm chart to stdout (debug)
+	helm template projektagile charts/projektagile
+
+helm-install: ## Install/upgrade the stack via Helm
+	helm upgrade --install projektagile charts/projektagile --create-namespace
+
+helm-uninstall: ## Uninstall the Helm release
+	helm uninstall projektagile
+
+## --- autoscaling ---
+
+metrics-server: ## Enable metrics-server addon (required for HPA)
+	minikube addons enable metrics-server
+
+hpa: ## Show HPAs and current metrics
+	kubectl get hpa -n $(NS)
+	@echo
+	-kubectl top pod -n $(NS)
+
+watch-scale: ## Watch HPA + pod count live
+	watch -n 2 'kubectl get hpa -n $(NS); echo; kubectl get pods -n $(NS) -l app=backend'
+
+## --- argocd ---
+
+argocd-install: ## Install ArgoCD into the cluster (one-time)
+	kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml --server-side
+	@echo "Wait ~60s for pods to come up, then: make argocd-ui"
+
+argocd-app: ## Register the projektagile Application with ArgoCD
+	kubectl apply -f argocd/application.yaml
+
+argocd-ui: ## Port-forward ArgoCD UI to localhost:8080
+	@echo "Opening ArgoCD UI at https://localhost:8080 (accept self-signed cert)"
+	@echo "User: admin   Password: run 'make argocd-password'"
+	kubectl port-forward -n argocd svc/argocd-server 8080:443
+
+argocd-password: ## Show ArgoCD admin password
+	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
 ## --- load testing ---
 
 load-test: ## Hammer the frontend with curl (Ctrl-C to stop)
 	@echo "Hitting http://$(MINIKUBE_IP) — Ctrl-C to stop"
 	@while true; do curl -s -o /dev/null http://$(MINIKUBE_IP)/; done
 
-.PHONY: help compose-up compose-dev compose-down mk-start mk-stop build load up down reload rollout pods events logs-backend logs-frontend logs-prev describe-backend urls grafana forward-prometheus forward-backend forward-postgres psql db-reset load-test
+stress: ## 50 parallel curl loops against backend (trigger HPA scale-up)
+	@echo "Stressing http://$(MINIKUBE_IP) with 50 parallel loops — Ctrl-C to stop"
+	@for i in $$(seq 1 50); do (while true; do curl -s -o /dev/null http://$(MINIKUBE_IP)/; done) & done; wait
+
+.PHONY: help compose-up compose-dev compose-down mk-start mk-stop build load up down reload rollout pods events logs-backend logs-frontend logs-prev describe-backend urls grafana forward-prometheus forward-backend forward-postgres psql db-reset helm-lint helm-render helm-install helm-uninstall metrics-server hpa watch-scale load-test stress argocd-install argocd-app argocd-ui argocd-password

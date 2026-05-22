@@ -6,6 +6,7 @@ import com.example.app.mapper.DtoMapper;
 import com.example.app.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -29,6 +30,11 @@ public class UserController {
     @GetMapping
     public List<UserDto> getUsers() {
         return userService.getAllUsers().stream().map(dtoMapper::toDto).toList();
+    }
+
+    @GetMapping("/me")
+    public UserDto me(Principal principal) {
+        return dtoMapper.toDto(userService.getByUsername(principal.getName()));
     }
 
     @GetMapping("/{id}")

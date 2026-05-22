@@ -19,7 +19,7 @@
     <header class="header">
         <p class="eyebrow">Studio Zarzadzania</p>
         <h1>Chat Zespolowy</h1>
-        <p class="subtitle">Komunikuj sie z czlonkami zespolu w czasie rzeczywistym.</p>
+        <p class="subtitle" th:text="'Zalogowany jako: ' + ${me.username}">Zalogowany jako: ...</p>
         <nav class="nav">
             <a class="nav-chip" th:href="@{/projectList}">Projekty</a>
             <a class="nav-chip" th:href="@{/userList}">Uzytkownicy</a>
@@ -31,7 +31,6 @@
         <aside class="threads-panel">
             <div class="threads-top">
                 <strong>Konwersacje</strong>
-                <button class="btn-icon" type="button" aria-label="Nowa rozmowa">+</button>
             </div>
 
             <label class="search-wrap" for="chatSearch">
@@ -39,93 +38,188 @@
             </label>
 
             <div class="thread-list">
-                <button class="thread active" type="button">
-                    <span class="avatar">AK</span>
+                <div th:if="${!projects.empty}" style="padding: 8px 4px; font-size: 12px; opacity: 0.6;">PROJEKTY</div>
+                <a th:each="p : ${projects}"
+                   th:href="@{/chat(projectId=${p.projectId})}"
+                   th:classappend="${conversationType == 'project' and conversationProject != null and conversationProject.projectId == p.projectId} ? ' active' : ''"
+                   class="thread"
+                   style="text-decoration: none; color: inherit;">
+                    <span class="avatar alt" th:text="'#' + ${#strings.substring(p.name, 0, 1)}">#P</span>
                     <span class="thread-main">
                         <span class="thread-topline">
-                            <strong>Anna Kowalska</strong>
-                            <span class="time">11:40</span>
+                            <strong th:text="${p.name}">Projekt</strong>
                         </span>
-                        <span class="preview">Jasne, wrzucam finalny widok za 15 min.</span>
+                        <span class="preview">Chat projektowy</span>
                     </span>
-                    <span class="unread">2</span>
-                </button>
+                </a>
 
-                <button class="thread" type="button">
-                    <span class="avatar alt">MN</span>
+                <div th:if="${!users.empty}" style="padding: 8px 4px; font-size: 12px; opacity: 0.6;">UZYTKOWNICY</div>
+                <a th:each="u : ${users}"
+                   th:href="@{/chat(withUserId=${u.user_id})}"
+                   th:classappend="${conversationType == 'private' and conversationWith != null and conversationWith.user_id == u.user_id} ? ' active' : ''"
+                   class="thread"
+                   style="text-decoration: none; color: inherit;">
+                    <span class="avatar"
+                          th:text="${(u.firstName != null and u.lastName != null) ? (#strings.substring(u.firstName, 0, 1) + #strings.substring(u.lastName, 0, 1)) : #strings.substring(u.username, 0, 2)}">XX</span>
                     <span class="thread-main">
                         <span class="thread-topline">
-                            <strong>Michal Nowak</strong>
-                            <span class="time">10:12</span>
+                            <strong th:text="${u.firstName != null ? u.firstName + ' ' + u.lastName : u.username}">User</strong>
                         </span>
-                        <span class="preview">Mozemy zsynchronizowac statusy taskow?</span>
+                        <span class="preview" th:text="'@' + ${u.username}">@user</span>
                     </span>
-                </button>
-
-                <button class="thread" type="button">
-                    <span class="avatar alt-2">FS</span>
-                    <span class="thread-main">
-                        <span class="thread-topline">
-                            <strong>Frontend Squad</strong>
-                            <span class="time">wczoraj</span>
-                        </span>
-                        <span class="preview">Nowy branch z poprawkami do review.</span>
-                    </span>
-                </button>
+                </a>
             </div>
         </aside>
 
-        <div class="chat-panel">
-            <div class="chat-head">
-                <div class="chat-user">
-                    <span class="avatar">AK</span>
-                    <div>
-                        <strong>Anna Kowalska</strong>
-                        <p>online teraz</p>
-                    </div>
-                </div>
-                <div class="chat-actions">
-                    <button class="btn-icon" type="button" aria-label="Polaczenie">&#128222;</button>
-                    <button class="btn-icon" type="button" aria-label="Wiecej">&#8943;</button>
+        <div class="chat-pane">
+            <div class="chat-header" th:if="${conversationType != 'none'}">
+                <strong th:if="${conversationType == 'private'}"
+                        th:text="'Rozmowa z ' + (${conversationWith.firstName} != null ? ${conversationWith.firstName} + ' ' + ${conversationWith.lastName} : ${conversationWith.username})">
+                    Rozmowa
+                </strong>
+                <strong th:if="${conversationType == 'project'}"
+                        th:text="'Projekt: ' + ${conversationProject.name}">
+                    Projekt
+                </strong>
+            </div>
+            <div class="chat-header" th:if="${conversationType == 'none'}">
+                <strong>Wybierz rozmowe z lewej strony</strong>
+            </div>
+
+            <div class="chat-list" id="chatList">
+                <div th:each="m : ${messages}"
+                     th:classappend="${m.senderId == me.user_id} ? ' out' : ' in'"
+                     class="message">
+                    <p th:if="${conversationType == 'project' and m.senderId != me.user_id}"
+                       style="font-size: 11px; opacity: 0.7; margin: 0 0 2px 0;"
+                       th:text="${m.senderUsername}">user</p>
+                    <p th:text="${m.content}">Tresc</p>
+                    <span th:text="${m.createdAt != null ? #strings.substring(m.createdAt, 11, 16) : ''}">12:00</span>
                 </div>
             </div>
 
-            <div class="messages" aria-live="polite">
-                <div class="day-separator">Dzisiaj</div>
-
-                <div class="message in">
-                    <p>Hej! Jak stoimy z widokiem listy projektow?</p>
-                    <span>11:31</span>
-                </div>
-
-                <div class="message out">
-                    <p>Zrobione. Dorzucilem tez nowy ekran chatu pod mock.</p>
-                    <span>11:34</span>
-                </div>
-
-                <div class="message in">
-                    <p>Super. Podepniesz jeszcze nawigacje z zadan i uzytkownikow?</p>
-                    <span>11:35</span>
-                </div>
-
-                <div class="message out">
-                    <p>Tak, zrobione. Link jest w naglowku i z listy projektow.</p>
-                    <span>11:38</span>
-                </div>
-
-                <div class="message in">
-                    <p>Jasne, wrzucam finalny widok za 15 min.</p>
-                    <span>11:40</span>
-                </div>
-            </div>
-
-            <form class="composer" th:action="@{/chat}" method="post">
-                <button class="btn-icon" type="button" aria-label="Dodaj zalacznik">+</button>
-                <input type="text" name="message" placeholder="Napisz wiadomosc...">
+            <form class="composer" id="chatForm" th:if="${conversationType != 'none'}" onsubmit="return false;">
+                <input type="text" id="messageInput" name="message" placeholder="Napisz wiadomosc..." autocomplete="off">
                 <button class="send-btn" type="submit">Wyslij</button>
             </form>
         </div>
     </section>
 </div>
+
+<script th:inline="javascript">
+    const CHAT_CONFIG = {
+        meId: /*[[${me.user_id}]]*/ 0,
+        meUsername: /*[[${me.username}]]*/ '',
+        wsPublicUrl: /*[[${wsPublicUrl}]]*/ 'http://localhost:8080',
+        conversationType: /*[[${conversationType}]]*/ 'none',
+        withUserId: /*[[${conversationWith != null ? conversationWith.user_id : null}]]*/ null,
+        projectId: /*[[${conversationProject != null ? conversationProject.projectId : null}]]*/ null
+    };
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+<script>
+(function () {
+    const chatList = document.getElementById('chatList');
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('messageInput');
+
+    if (chatList) chatList.scrollTop = chatList.scrollHeight;
+
+    function appendMessage(msg) {
+        const out = msg.senderId === CHAT_CONFIG.meId;
+        const div = document.createElement('div');
+        div.className = 'message ' + (out ? 'out' : 'in');
+
+        if (CHAT_CONFIG.conversationType === 'project' && !out) {
+            const who = document.createElement('p');
+            who.style.cssText = 'font-size:11px; opacity:0.7; margin:0 0 2px 0;';
+            who.textContent = msg.senderUsername;
+            div.appendChild(who);
+        }
+
+        const p = document.createElement('p');
+        p.textContent = msg.content;
+        div.appendChild(p);
+
+        const t = document.createElement('span');
+        try {
+            t.textContent = new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+        } catch (e) {
+            t.textContent = '';
+        }
+        div.appendChild(t);
+
+        chatList.appendChild(div);
+        chatList.scrollTop = chatList.scrollHeight;
+    }
+
+    const client = new StompJs.Client({
+        webSocketFactory: () => new SockJS(CHAT_CONFIG.wsPublicUrl + '/ws'),
+        reconnectDelay: 3000,
+        debug: () => {}
+    });
+
+    client.onConnect = function () {
+        console.log('[chat] connected', CHAT_CONFIG.wsPublicUrl + '/ws');
+
+        if (CHAT_CONFIG.conversationType === 'private') {
+            client.subscribe('/topic/user/' + CHAT_CONFIG.meId, function (frame) {
+                const msg = JSON.parse(frame.body);
+                if (msg.senderId === CHAT_CONFIG.withUserId || msg.receiverId === CHAT_CONFIG.withUserId) {
+                    appendMessage(msg);
+                }
+            });
+        } else if (CHAT_CONFIG.conversationType === 'project') {
+            client.subscribe('/topic/project/' + CHAT_CONFIG.projectId, function (frame) {
+                appendMessage(JSON.parse(frame.body));
+            });
+        }
+    };
+
+    client.onStompError = function (frame) {
+        console.error('[chat] STOMP error', frame.headers['message'], frame.body);
+    };
+
+    if (CHAT_CONFIG.conversationType !== 'none') {
+        client.activate();
+    }
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const text = input.value.trim();
+            if (!text || !client.connected) return;
+
+            const payload = {
+                senderId: CHAT_CONFIG.meId,
+                content: text,
+                type: 'TEXT'
+            };
+
+            if (CHAT_CONFIG.conversationType === 'private') {
+                payload.receiverId = CHAT_CONFIG.withUserId;
+                client.publish({destination: '/app/chat.private', body: JSON.stringify(payload)});
+            } else if (CHAT_CONFIG.conversationType === 'project') {
+                payload.projectId = CHAT_CONFIG.projectId;
+                client.publish({destination: '/app/chat.project', body: JSON.stringify(payload)});
+            }
+
+            input.value = '';
+        });
+    }
+
+    const search = document.getElementById('chatSearch');
+    if (search) {
+        search.addEventListener('input', function () {
+            const q = search.value.toLowerCase();
+            document.querySelectorAll('.thread-list .thread').forEach(function (el) {
+                el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+    }
+})();
+</script>
 </body>
 </html>
