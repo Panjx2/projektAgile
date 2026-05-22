@@ -20,16 +20,26 @@ public class FileController {
 
     @PostMapping("/project/{projectId}")
     public String uploadToProject(@PathVariable Long projectId,
-                                  @RequestParam("file") MultipartFile file) throws IOException {
-        fileService.uploadToProject(projectId, file);
+                                  @RequestParam("file") MultipartFile file) {
+        try {
+            fileService.uploadToProject(projectId, file);
+        } catch (Exception e) {
+            String error = e.getMessage() != null && e.getMessage().contains("413") ? "fileTooLarge" : "uploadError";
+            return "redirect:/projectDetails?projectId=" + projectId + "&uploadError=" + error;
+        }
         return "redirect:/projectDetails?projectId=" + projectId;
     }
 
     @PostMapping("/task/{taskId}")
     public String uploadToTask(@PathVariable Long taskId,
                                @RequestParam("file") MultipartFile file,
-                               @RequestParam Long projectId) throws IOException {
-        fileService.uploadToTask(taskId, file);
+                               @RequestParam Long projectId) {
+        try {
+            fileService.uploadToTask(taskId, file);
+        } catch (Exception e) {
+            String error = e.getMessage() != null && e.getMessage().contains("413") ? "fileTooLarge" : "uploadError";
+            return "redirect:/taskEdit?taskId=" + taskId + "&projectId=" + projectId + "&uploadError=" + error;
+        }
         return "redirect:/taskEdit?taskId=" + taskId + "&projectId=" + projectId;
     }
 

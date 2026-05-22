@@ -126,6 +126,11 @@
                 <p style="margin:0;">Brak plików w tym zadaniu</p>
             </div>
 
+            <div th:if="${param.uploadError}" style="margin-top:12px; padding:10px 14px; background:#fef2f2; border:1px solid #fca5a5; border-radius:8px; color:#b91c1c; font-size:0.9rem;">
+                <span th:if="${param.uploadError[0] == 'fileTooLarge'}">Plik jest zbyt duży. Maksymalny rozmiar to 10MB.</span>
+                <span th:unless="${param.uploadError[0] == 'fileTooLarge'}">Wystąpił błąd podczas przesyłania pliku. Spróbuj ponownie.</span>
+            </div>
+
             <form th:action="@{/files/task/{id}(id=${task.taskId})}" method="post" enctype="multipart/form-data"
                   style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line);">
                 <input type="hidden" name="projectId" th:value="${projectId}"/>
