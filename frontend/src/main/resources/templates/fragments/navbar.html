@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav th:fragment="navbar" class="topbar">
+
+    <a th:href="@{/projectList}" class="nav-logo">
+        Projekty
+    </a>
+
+    <div class="nav-actions">
+
+        <span class="nav-user"
+              th:if="${loggedIn}"
+              th:text="${username}">
+        </span>
+
+        <a th:if="${!loggedIn}"
+           th:href="@{/login}"
+           class="nav-btn">
+            Zaloguj
+        </a>
+
+        <form th:if="${loggedIn}"
+              th:action="@{/logout}"
+              method="post"
+              style="display:inline">
+
+            <button class="nav-btn nav-logout"
+                    type="submit">
+                Wyloguj
+            </button>
+
+        </form>
+
+    </div>
+
+</nav>
+
+</body>
+</html>
