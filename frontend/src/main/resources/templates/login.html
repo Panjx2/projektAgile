@@ -30,12 +30,8 @@
             <h1>Logowanie</h1>
         </header>
 
-        <div class="err" th:if="${param.error}">
-            Niepoprawny login lub hasło
-        </div>
-
-        <div class="msg" th:if="${param.logout}">
-            Wylogowano pomyślnie
+        <div class="err" th:if="${error}">
+            <span th:text="${error}">Niepoprawny login lub hasło</span>
         </div>
 
         <div class="container card">
