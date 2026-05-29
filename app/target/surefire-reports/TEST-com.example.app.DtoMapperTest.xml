@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.app.ProjectServiceTest" time="0.013" tests="15" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.app.DtoMapperTest" time="0.005" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -67,19 +67,17 @@
     <property name="java.class.version" value="69.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[app] "/>
   </properties>
-  <testcase name="shouldDeleteProject" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldGetAllProjectsWhenNameFilterIsEmpty" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldThrowWhenUserNotFoundOnAddUser" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldThrowWhenProjectNotFoundOnAddUser" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldInitializeNullUsersSetOnAddUser" classname="com.example.app.ProjectServiceTest" time="0.0"/>
-  <testcase name="shouldCreateProject" classname="com.example.app.ProjectServiceTest" time="0.0"/>
-  <testcase name="shouldThrowWhenProjectNotFoundOnUpdate" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldAddUserToProject" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldUpdateProject" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldFilterProjectsByName" classname="com.example.app.ProjectServiceTest" time="0.0"/>
-  <testcase name="shouldGetProjectById" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldRemoveUserFromProject" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldGetAllProjects" classname="com.example.app.ProjectServiceTest" time="0.001"/>
-  <testcase name="shouldThrowWhenProjectNotFoundOnGet" classname="com.example.app.ProjectServiceTest" time="0.0"/>
-  <testcase name="shouldTreatEmptyStringProjectNameFilterAsNoFilter" classname="com.example.app.ProjectServiceTest" time="0.0"/>
+  <testcase name="shouldMapUserToDto" classname="com.example.app.DtoMapperTest" time="0.001"/>
+  <testcase name="shouldMapProjectDtoToEntity" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapProjectToDtoWithUserIds" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapUserDtoToEntityWithAllFields" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapProjectToDtoWithNullUsersAsNullUserIds" classname="com.example.app.DtoMapperTest" time="0.001"/>
+  <testcase name="shouldMapTaskToDtoWithNullProjectAsNullId" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldNotCopyPasswordToUserDto" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapProjectToDto" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapProjectDtoToEntityIgnoringUserIds" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapTaskToDtoWithNullAssignedUserAsNullId" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapTaskToDtoWithAllRelations" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapProjectDtoToEntityWithEmptyNonNullUsersSet" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldMapTaskDtoToEntity" classname="com.example.app.DtoMapperTest" time="0.0"/>
 </testsuite>

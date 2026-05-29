@@ -313,4 +313,90 @@ class FileServiceTest {
         assertFalse(Files.exists(tempFile));
         verify(fileRepository).delete(entity);
     }
+
+    @Test
+    void shouldThrowWhenProjectNotFoundOnUpload() {
+        when(projectRepository.findById(99L)).thenReturn(Optional.empty());
+
+        MockMultipartFile file =
+                new MockMultipartFile("file", "test.txt", "text/plain", "data".getBytes());
+
+        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+                () -> fileService.uploadToProject(99L, file));
+    }
+
+    @Test
+    void shouldThrowWhenTaskNotFoundOnUpload() {
+        when(taskRepository.findById(99L)).thenReturn(Optional.empty());
+
+        MockMultipartFile file =
+                new MockMultipartFile("file", "test.txt", "text/plain", "data".getBytes());
+
+        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+                () -> fileService.uploadToTask(99L, file));
+    }
+
+    @Test
+    void shouldThrowWhenFileEntityNotFoundOnDownload() {
+        when(fileRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+                () -> fileService.downloadFile(99L));
+    }
+
+    @Test
+    void shouldThrowWhenFileEntityNotFoundOnDelete() {
+        when(fileRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(java.util.NoSuchElementException.class,
+                () -> fileService.deleteFile(99L));
+    }
+
+    @Test
+    void shouldGetFileById() {
+        FileEntity entity = new FileEntity();
+        entity.setId(1L);
+        entity.setName("raport.pdf");
+
+        when(fileRepository.findById(1L)).thenReturn(Optional.of(entity));
+
+        FileEntity result = fileService.getFileById(1L);
+
+        assertEquals("raport.pdf", result.getName());
+    }
+
+    @Test
+    void shouldThrowWhenFileNotFoundOnGetById() {
+        when(fileRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+                () -> fileService.getFileById(99L));
+    }
+
+    @Test
+    void shouldGetFilesByProjectReturnsEmptyListWhenNoneExist() {
+        when(projectRepository.existsById(1L)).thenReturn(true);
+        when(fileRepository.findByProjectId(1L)).thenReturn(List.of());
+
+        List<FileEntity> result = fileService.getFilesByProject(1L);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void shouldUploadToProjectAndStoreFileOnDisk() throws IOException {
+        Project project = new Project();
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(fileRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        MockMultipartFile file =
+                new MockMultipartFile("file", "dokument.txt", "text/plain", "tresc".getBytes());
+
+        FileEntity result = fileService.uploadToProject(1L, file);
+
+        Path storedPath = Path.of(result.getPath());
+        assertTrue(Files.exists(storedPath), "Plik powinien istniec na dysku");
+        assertArrayEquals("tresc".getBytes(), Files.readAllBytes(storedPath));
+    }
 }

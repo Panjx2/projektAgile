@@ -136,4 +136,56 @@ class UserServiceTest {
         assertEquals("Kowalski", result.getLastName());
         assertEquals("ADMIN", result.getRole());
     }
+
+    @Test
+    void shouldTreatEmptyStringFilterAsNoFilter() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> page = new PageImpl<>(List.of(new User(), new User()));
+
+        when(userRepository.findAll(pageable)).thenReturn(page);
+
+        Page<User> result = userService.getUsers("", pageable);
+
+        assertEquals(2, result.getTotalElements());
+        verify(userRepository).findAll(pageable);
+        verify(userRepository, never()).findByUsernameContainingIgnoreCase(any(), any());
+    }
+
+    @Test
+    void shouldReturnExactlySavedEntityOnCreate() {
+        User user = new User();
+        user.setUsername("test");
+
+        when(userRepository.save(user)).thenReturn(user);
+
+        User result = userService.createUser(user);
+
+        assertSame(user, result);
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void shouldUpdateUserFieldsToNullWhenUpdatedHasNulls() {
+        User existing = new User();
+        existing.setId(1L);
+        existing.setUsername("stary");
+        existing.setEmail("stary@test.com");
+
+        User updated = new User();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(userRepository.save(existing)).thenReturn(existing);
+
+        User result = userService.updateUser(1L, updated);
+
+        assertNull(result.getUsername());
+        assertNull(result.getEmail());
+    }
+
+    @Test
+    void shouldCallDeleteByIdExactlyOnce() {
+        userService.deleteUser(42L);
+
+        verify(userRepository, times(1)).deleteById(42L);
+    }
 }

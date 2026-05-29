@@ -43,7 +43,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    //TODO bo to jest prowizora
+    //TODO
     @Bean
     CommandLineRunner init(UserRepository userRepository, PasswordEncoder encoder) {
         return args -> {

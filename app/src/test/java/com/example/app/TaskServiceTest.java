@@ -148,4 +148,88 @@ class TaskServiceTest {
 
         assertEquals(2, result.getTotalElements());
     }
+
+    @Test
+    void shouldKeepPresetStatusWhenProvided() {
+        Project project = new Project();
+        Task task = new Task();
+        task.setStatus(TaskStatus.IN_PROGRESS);
+
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(taskRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Task result = taskService.createTask(1L, task);
+
+        assertEquals(TaskStatus.IN_PROGRESS, result.getStatus());
+    }
+
+    @Test
+    void shouldKeepPresetPriorityWhenProvided() {
+        Project project = new Project();
+        Task task = new Task();
+        task.setPriority(TaskPriority.LOW);
+
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(taskRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Task result = taskService.createTask(1L, task);
+
+        assertEquals(TaskPriority.LOW, result.getPriority());
+    }
+
+    @Test
+    void shouldThrowWhenProjectNotFoundOnCreateTask() {
+        when(projectRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(java.util.NoSuchElementException.class,
+                () -> taskService.createTask(99L, new Task()));
+    }
+
+    @Test
+    void shouldThrowWhenTaskNotFoundOnAssignUser() {
+        when(taskRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(java.util.NoSuchElementException.class,
+                () -> taskService.assignUser(99L, 1L));
+    }
+
+    @Test
+    void shouldThrowWhenUserNotFoundOnAssignUser() {
+        Task task = new Task();
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(java.util.NoSuchElementException.class,
+                () -> taskService.assignUser(1L, 99L));
+    }
+
+    @Test
+    void shouldThrowWhenTaskNotFoundOnChangeStatus() {
+        when(taskRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(java.util.NoSuchElementException.class,
+                () -> taskService.changeStatus(99L, TaskStatus.DONE));
+    }
+
+    @Test
+    void shouldThrowWhenTaskNotFoundOnChangePriority() {
+        when(taskRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(java.util.NoSuchElementException.class,
+                () -> taskService.changePriority(99L, TaskPriority.HIGH));
+    }
+
+    @Test
+    void shouldGetTasksByProjectWithAllFilters() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Task> page = new PageImpl<>(java.util.List.of(new Task()));
+        when(taskRepository.findAll(
+                ArgumentMatchers.<Specification<Task>>any(),
+                eq(pageable)
+        )).thenReturn(page);
+
+        Page<Task> result = taskService.getTasksByProject(1L, "bug", TaskStatus.TODO, "jan", TaskPriority.HIGH, pageable);
+
+        assertEquals(1, result.getTotalElements());
+    }
 }

@@ -148,4 +148,63 @@ class ProjectServiceTest {
 
         assertFalse(result.getUsers().contains(user));
     }
+
+    @Test
+    void shouldThrowWhenProjectNotFoundOnUpdate() {
+        when(projectRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class,
+                () -> projectService.updateProject(99L, new Project()));
+    }
+
+    @Test
+    void shouldThrowWhenProjectNotFoundOnAddUser() {
+        when(projectRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class,
+                () -> projectService.addUserToProject(99L, 1L));
+    }
+
+    @Test
+    void shouldThrowWhenUserNotFoundOnAddUser() {
+        Project project = new Project();
+        project.setUsers(new HashSet<>());
+
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class,
+                () -> projectService.addUserToProject(1L, 99L));
+    }
+
+    @Test
+    void shouldTreatEmptyStringProjectNameFilterAsNoFilter() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Project> page = new PageImpl<>(List.of(new Project()));
+
+        when(projectRepository.findAll(pageable)).thenReturn(page);
+
+        Page<Project> result = projectService.getProjects("", pageable);
+
+        assertEquals(1, result.getTotalElements());
+        verify(projectRepository).findAll(pageable);
+        verify(projectRepository, never()).findByNameContainingIgnoreCase(any(), any());
+    }
+
+    @Test
+    void shouldInitializeNullUsersSetOnAddUser() {
+        Project project = new Project();
+        project.setUsers(null);
+
+        User user = new User();
+        user.setProjects(new HashSet<>());
+
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+
+        Project result = projectService.addUserToProject(1L, 2L);
+
+        assertNotNull(result.getUsers());
+        assertTrue(result.getUsers().contains(user));
+    }
 }
