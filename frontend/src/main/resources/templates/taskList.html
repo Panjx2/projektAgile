@@ -7,9 +7,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link th:href="@{/css/list-style.css}" rel="stylesheet" />
+    <link th:href="@{/css/navbar.css}" rel="stylesheet" />
     <title>Zadania projektu</title>
 </head>
 <body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <div class="page-bg" aria-hidden="true">
     <div class="orb orb-left"></div>
     <div class="orb orb-right"></div>

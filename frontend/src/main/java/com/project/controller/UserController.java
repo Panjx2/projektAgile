@@ -4,18 +4,24 @@ import com.project.exception.HttpException;
 import com.project.model.User;
 import com.project.service.UserService;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClient;
+
+import java.util.Map;
 
 @Controller
 public class UserController {
 
     private final UserService userService;
+    private final RestClient restClient;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RestClient restClient) {
         this.userService = userService;
+        this.restClient = restClient;
     }
 
     @GetMapping("/userList")
@@ -69,9 +75,23 @@ public class UserController {
         return "register";
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
+    @PostMapping("/register")
+    public String registerSave(@ModelAttribute User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
+        try {
+            restClient.post()
+                    .uri("/api/auth/register")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(user)
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (Exception e) {
+            bindingResult.rejectValue(Strings.EMPTY, "http.error", "Błąd rejestracji");
+            return "register";
+        }
+        return "redirect:/login";
     }
 
 }

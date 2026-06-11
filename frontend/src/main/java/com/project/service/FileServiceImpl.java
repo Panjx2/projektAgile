@@ -3,7 +3,7 @@ package com.project.service;
 import com.project.exception.HttpException;
 import com.project.model.FileInfo;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,10 +49,15 @@ public class FileServiceImpl implements FileService {
     @Override
     public FileInfo uploadToProject(Long projectId, MultipartFile file) throws IOException {
         LinkedMultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", new ByteArrayResource(file.getBytes()) {
+        body.add("file", new InputStreamResource(file.getInputStream()) {
             @Override
             public String getFilename() {
                 return file.getOriginalFilename();
+            }
+
+            @Override
+            public long contentLength() {
+                return file.getSize();
             }
         });
 
@@ -70,10 +75,15 @@ public class FileServiceImpl implements FileService {
     @Override
     public FileInfo uploadToTask(Long taskId, MultipartFile file) throws IOException {
         LinkedMultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", new ByteArrayResource(file.getBytes()) {
+        body.add("file", new InputStreamResource(file.getInputStream()) {
             @Override
             public String getFilename() {
                 return file.getOriginalFilename();
+            }
+
+            @Override
+            public long contentLength() {
+                return file.getSize();
             }
         });
 

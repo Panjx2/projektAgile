@@ -30,10 +30,15 @@ public class ProjectController {
         this.fileService = fileService;
     }
 
-    @GetMapping({"/", "/projectList", "/projectList"})
+    @GetMapping("/projectList")
     public String projectList(Model model) {
         model.addAttribute("projects", projectService.getAllProjects());
         return "projectList";
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/login";
     }
 
     @GetMapping("/projectDetails")

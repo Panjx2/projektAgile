@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
@@ -145,9 +146,155 @@ class FileServiceTest {
 
         when(fileRepository.findById(1L)).thenReturn(Optional.of(entity));
 
-        byte[] result = fileService.downloadFile(1L);
+        Resource result = fileService.downloadFile(1L);
 
-        assertArrayEquals("data".getBytes(), result);
+        assertTrue(result.exists());
+        assertArrayEquals("data".getBytes(), result.getInputStream().readAllBytes());
+    }
+
+    @Test
+    void shouldThrowWhenFileTooLargeForProject() {
+        byte[] largeData = new byte[(int) (10 * 1024 * 1024) + 1]; // 10MB + 1 byte
+        MockMultipartFile file =
+                new MockMultipartFile("file", "big.bin", "application/octet-stream", largeData);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> fileService.uploadToProject(1L, file));
+    }
+
+    @Test
+    void shouldThrowWhenFileTooLargeForTask() {
+        byte[] largeData = new byte[(int) (10 * 1024 * 1024) + 1]; // 10MB + 1 byte
+        MockMultipartFile file =
+                new MockMultipartFile("file", "big.bin", "application/octet-stream", largeData);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> fileService.uploadToTask(1L, file));
+    }
+
+    @Test
+    void shouldAcceptFileAtExactSizeLimit() throws IOException {
+        // dokładnie 10MB powinno przejść
+        byte[] maxData = new byte[10 * 1024 * 1024];
+        Project project = new Project();
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(fileRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        MockMultipartFile file =
+                new MockMultipartFile("file", "limit.bin", "application/octet-stream", maxData);
+
+        assertDoesNotThrow(() -> fileService.uploadToProject(1L, file));
+    }
+
+    @Test
+    void shouldRejectOversizedFileAndNotSaveToDatabase() {
+        // plik za duży — nie może trafić do bazy
+        byte[] oversized = new byte[(int) (10 * 1024 * 1024) + 1];
+        MockMultipartFile file =
+                new MockMultipartFile("file", "too-big.bin", "application/octet-stream", oversized);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> fileService.uploadToProject(1L, file));
+
+        verifyNoInteractions(fileRepository);
+    }
+
+    @Test
+    void shouldRejectOversizedFileWithCorrectMessage() {
+        byte[] oversized = new byte[(int) (10 * 1024 * 1024) + 1];
+        MockMultipartFile file =
+                new MockMultipartFile("file", "too-big.bin", "application/octet-stream", oversized);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> fileService.uploadToProject(1L, file));
+
+        assertTrue(ex.getMessage().toLowerCase().contains("too large") ||
+                   ex.getMessage().toLowerCase().contains("za duż"));
+    }
+
+    @Test
+    void shouldThrowWhenEmptyFileUploadedToProject() {
+        MockMultipartFile file =
+                new MockMultipartFile("file", "empty.txt", "text/plain", new byte[0]);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> fileService.uploadToProject(1L, file));
+    }
+
+    @Test
+    void shouldThrowWhenEmptyFileUploadedToTask() {
+        MockMultipartFile file =
+                new MockMultipartFile("file", "empty.txt", "text/plain", new byte[0]);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> fileService.uploadToTask(1L, file));
+    }
+
+    @Test
+    void shouldThrowWhenDownloadedFileNotOnDisk() {
+        FileEntity entity = new FileEntity();
+        entity.setPath("/nonexistent/path/file.txt");
+
+        when(fileRepository.findById(99L)).thenReturn(Optional.of(entity));
+
+        assertThrows(EntityNotFoundException.class,
+                () -> fileService.downloadFile(99L));
+    }
+
+    @Test
+    void shouldPreserveOriginalFilenameOnProjectUpload() throws IOException {
+        Project project = new Project();
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(fileRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        MockMultipartFile file =
+                new MockMultipartFile("file", "raport_końcowy.pdf", "application/pdf", "content".getBytes());
+
+        FileEntity result = fileService.uploadToProject(1L, file);
+
+        assertEquals("raport_końcowy.pdf", result.getName());
+    }
+
+    @Test
+    void shouldPreserveOriginalFilenameOnTaskUpload() throws IOException {
+        Task task = new Task();
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+        when(fileRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        MockMultipartFile file =
+                new MockMultipartFile("file", "screenshot.png", "image/png", "img".getBytes());
+
+        FileEntity result = fileService.uploadToTask(1L, file);
+
+        assertEquals("screenshot.png", result.getName());
+    }
+
+    @Test
+    void shouldUseUnnamedFallbackWhenFilenameIsNull() throws IOException {
+        Project project = new Project();
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(fileRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        MockMultipartFile file =
+                new MockMultipartFile("file", null, "application/octet-stream", "data".getBytes());
+
+        FileEntity result = fileService.uploadToProject(1L, file);
+
+        assertEquals("unnamed_file", result.getName());
+    }
+
+    @Test
+    void shouldStripPathTraversalFromFilename() throws IOException {
+        Project project = new Project();
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(fileRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        MockMultipartFile file =
+                new MockMultipartFile("file", "../../etc/passwd", "text/plain", "data".getBytes());
+
+        FileEntity result = fileService.uploadToProject(1L, file);
+
+        assertEquals("passwd", result.getName());
     }
 
 

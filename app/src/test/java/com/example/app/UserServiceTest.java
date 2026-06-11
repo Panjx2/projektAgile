@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.data.domain.*;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,7 +54,7 @@ class UserServiceTest {
     @Test
     void shouldFilterUsers() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<User> page = new PageImpl<>(java.util.List.of(new User()));
+        Page<User> page = new PageImpl<>(List.of(new User()));
 
         when(userRepository.findByUsernameContainingIgnoreCase("test", pageable))
                 .thenReturn(page);
@@ -60,5 +62,78 @@ class UserServiceTest {
         Page<User> result = userService.getUsers("test", pageable);
 
         assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    void shouldGetAllUsersWhenFilterIsEmpty() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> page = new PageImpl<>(List.of(new User(), new User()));
+
+        when(userRepository.findAll(pageable)).thenReturn(page);
+
+        Page<User> result = userService.getUsers(null, pageable);
+
+        assertEquals(2, result.getTotalElements());
+    }
+
+    @Test
+    void shouldGetAllUsers() {
+        List<User> users = List.of(new User(), new User(), new User());
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<User> result = userService.getAllUsers();
+
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    void shouldGetUserById() {
+        User user = new User();
+        user.setUsername("janek");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        User result = userService.getUserById(1L);
+
+        assertEquals("janek", result.getUsername());
+    }
+
+    @Test
+    void shouldThrowWhenUserNotFound() {
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class,
+                () -> userService.getUserById(99L));
+    }
+
+    @Test
+    void shouldDeleteUser() {
+        userService.deleteUser(1L);
+
+        verify(userRepository).deleteById(1L);
+    }
+
+    @Test
+    void shouldUpdateAllUserFields() {
+        User existing = new User();
+        existing.setId(1L);
+
+        User updated = new User();
+        updated.setUsername("updatedUser");
+        updated.setEmail("updated@example.com");
+        updated.setFirstName("Jan");
+        updated.setLastName("Kowalski");
+        updated.setRole("ADMIN");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(userRepository.save(existing)).thenReturn(existing);
+
+        User result = userService.updateUser(1L, updated);
+
+        assertEquals("updatedUser", result.getUsername());
+        assertEquals("updated@example.com", result.getEmail());
+        assertEquals("Jan", result.getFirstName());
+        assertEquals("Kowalski", result.getLastName());
+        assertEquals("ADMIN", result.getRole());
     }
 }

@@ -7,29 +7,33 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+                          JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
-
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/api/auth/**", "/ws/**",  "/swagger-ui/**", "/actuator/health/**", "/actuator/info", "/actuator/prometheus").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/users/validate-*", "/ws/**",  "/swagger-ui/**", "/actuator/health/**", "/actuator/info", "/actuator/prometheus").permitAll()
 
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
@@ -38,12 +42,11 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
-                .httpBasic(Customizer.withDefaults());
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    //TODO bo to jest prowizora
     @Bean
     CommandLineRunner init(UserRepository userRepository, PasswordEncoder encoder) {
         return args -> {
@@ -58,6 +61,18 @@ public class SecurityConfig {
                 admin.setRole("ROLE_ADMIN");
 
                 userRepository.save(admin);
+            }
+            
+            if (userRepository.findByUsername("user").isEmpty()) {
+                User user = new User();
+                user.setUsername("user");
+                user.setEmail("user@sample.com");
+                user.setFirstName("User");
+                user.setLastName("User");
+                user.setPassword(encoder.encode("user"));
+                user.setRole("ROLE_USER");
+
+                userRepository.save(user);
             }
         };
     }

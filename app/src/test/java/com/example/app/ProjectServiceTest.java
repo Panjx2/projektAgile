@@ -78,7 +78,6 @@ class ProjectServiceTest {
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
         when(userRepository.findById(2L)).thenReturn(Optional.of(user));
-        when(projectRepository.save(project)).thenReturn(project);
 
         Project result = projectService.addUserToProject(1L, 2L);
 
@@ -96,5 +95,57 @@ class ProjectServiceTest {
         Page<Project> result = projectService.getProjects("test", pageable);
 
         assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    void shouldGetAllProjectsWhenNameFilterIsEmpty() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Project> page = new PageImpl<>(List.of(new Project(), new Project()));
+
+        when(projectRepository.findAll(pageable)).thenReturn(page);
+
+        Page<Project> result = projectService.getProjects(null, pageable);
+
+        assertEquals(2, result.getTotalElements());
+    }
+
+    @Test
+    void shouldGetAllProjects() {
+        List<Project> projects = List.of(new Project(), new Project());
+        when(projectRepository.findAll()).thenReturn(projects);
+
+        List<Project> result = projectService.getAllProjects();
+
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void shouldDeleteProject() {
+        projectService.deleteProject(1L);
+
+        verify(projectRepository).deleteById(1L);
+    }
+
+    @Test
+    void shouldThrowWhenProjectNotFoundOnGet() {
+        when(projectRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class,
+                () -> projectService.getProjectById(99L));
+    }
+
+    @Test
+    void shouldRemoveUserFromProject() {
+        User user = new User();
+        Project project = new Project();
+        project.setUsers(new HashSet<>(Set.of(user)));
+
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+        when(projectRepository.save(project)).thenReturn(project);
+
+        Project result = projectService.removeUserFromProject(1L, 2L);
+
+        assertFalse(result.getUsers().contains(user));
     }
 }

@@ -2,11 +2,16 @@ package com.example.app.controller;
 
 import com.example.app.data.FileEntity;
 import com.example.app.service.FileService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -52,14 +57,16 @@ public class FileController {
     }
 
     @GetMapping("/{fileId}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId) throws Exception {
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
+        FileEntity fileEntity = fileService.getFileById(fileId);
+        Resource resource = fileService.downloadFile(fileId);
 
-        String fileName = fileService.getFileById(fileId).getName();
-        byte[] data = fileService.downloadFile(fileId);
-
+        String encodedName = UriUtils.encodePath(fileEntity.getName(), StandardCharsets.UTF_8);
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
-                .body(data);
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + fileEntity.getName() + "\"; filename*=UTF-8''" + encodedName)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
 }

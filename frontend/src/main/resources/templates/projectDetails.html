@@ -7,9 +7,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link th:href="@{/css/project-details.css}" rel="stylesheet" />
+    <link th:href="@{/css/navbar.css}" rel="stylesheet" />
     <title>Detale Projektu</title>
 </head>
 <body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <div class="page-bg" aria-hidden="true">
     <div class="orb orb-left"></div>
     <div class="orb orb-right"></div>
@@ -126,6 +128,11 @@
 
             <div class="empty-state" th:if="${files == null or #lists.isEmpty(files)}">
                 <p>Brak plików w tym projekcie</p>
+            </div>
+
+            <div th:if="${param.uploadError}" style="margin-top:12px; padding:10px 14px; background:#fef2f2; border:1px solid #fca5a5; border-radius:8px; color:#b91c1c; font-size:0.9rem;">
+                <span th:if="${param.uploadError[0] == 'fileTooLarge'}">Plik jest zbyt duży. Maksymalny rozmiar to 10MB.</span>
+                <span th:unless="${param.uploadError[0] == 'fileTooLarge'}">Wystąpił błąd podczas przesyłania pliku. Spróbuj ponownie.</span>
             </div>
 
             <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--line);">
