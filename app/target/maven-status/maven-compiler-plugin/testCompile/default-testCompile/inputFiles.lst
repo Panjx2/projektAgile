@@ -1,7 +1,17 @@
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/AuthControllerTest.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/DtoMapperTest.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/FileServiceTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/GlobalExceptionHandlerTest.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/MessageServiceTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/ProjectControllerTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/ProjectRepositoryIntegrationTest.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/ProjectRepositoryTest.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/ProjectServiceTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/ProjectWorkflowIntegrationTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/SecurityIntegrationTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/TaskControllerTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/TaskRepositoryIntegrationTest.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/TaskServiceTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/UserControllerTest.java
+/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/UserRepositoryTest.java
 /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app/src/test/java/com/example/app/UserServiceTest.java

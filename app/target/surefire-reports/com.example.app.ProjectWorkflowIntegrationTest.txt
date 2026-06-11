@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.app.ProjectWorkflowIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.23 s -- in com.example.app.ProjectWorkflowIntegrationTest

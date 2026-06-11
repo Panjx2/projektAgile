@@ -38,7 +38,7 @@
         <div class="container card">
             <div class="btns-panel">
                 <button class="btn" type="submit" th:name="${akcja}" th:text="${opis}">Zapisz</button>
-                <button class="btn btn-muted" type="submit" name="cancel" value="true">Anuluj</button>
+                <button class="btn btn-muted" type="submit" name="cancel" value="true" formnovalidate>Anuluj</button>
             </div>
 
             <div class="field-wrap" th:if="*{user_id != null}">
@@ -78,7 +78,7 @@
             </div>
 
             <div class="danger-panel" th:if="*{user_id != null}">
-                <button class="btn btn-danger" type="submit" name="delete" value="true">Usun</button>
+                <button class="btn btn-danger" type="submit" name="delete" value="true" formnovalidate>Usun</button>
             </div>
         </div>
     </form>

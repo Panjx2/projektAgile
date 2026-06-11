@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.app.DtoMapperTest" time="0.004" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.app.GlobalExceptionHandlerTest" time="0.051" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -68,17 +68,17 @@
     <property name="java.class.version" value="69.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[app] "/>
   </properties>
-  <testcase name="shouldMapUserToDto" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectDtoToEntity" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectToDtoWithUserIds" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapUserDtoToEntityWithAllFields" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectToDtoWithNullUsersAsNullUserIds" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapTaskToDtoWithNullProjectAsNullId" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldNotCopyPasswordToUserDto" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectToDto" classname="com.example.app.DtoMapperTest" time="0.001"/>
-  <testcase name="shouldMapProjectDtoToEntityIgnoringUserIds" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapTaskToDtoWithNullAssignedUserAsNullId" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapTaskToDtoWithAllRelations" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectDtoToEntityWithEmptyNonNullUsersSet" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapTaskDtoToEntity" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldHandleMultipleExceptionTypesIndependently" classname="com.example.app.GlobalExceptionHandlerTest" time="0.008">
+    <system-out><![CDATA[2026-06-11T18:32:31.722+02:00  INFO 21728 --- [app] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.app.GlobalExceptionHandlerTest]: GlobalExceptionHandlerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-06-11T18:32:31.725+02:00  INFO 21728 --- [app] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.app.AppApplication for test class com.example.app.GlobalExceptionHandlerTest
+2026-06-11T18:32:31.726+02:00  INFO 21728 --- [app] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-06-11T18:32:31.726+02:00  INFO 21728 --- [app] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5b7b5dfa]]
+2026-06-11T18:32:31.726+02:00  INFO 21728 --- [app] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+]]></system-out>
+  </testcase>
+  <testcase name="shouldReturn400WithExceptionMessage" classname="com.example.app.GlobalExceptionHandlerTest" time="0.007"/>
+  <testcase name="shouldReturn404ForEntityNotFoundException" classname="com.example.app.GlobalExceptionHandlerTest" time="0.005"/>
+  <testcase name="shouldReturn404WithEntityNotFoundMessage" classname="com.example.app.GlobalExceptionHandlerTest" time="0.005"/>
+  <testcase name="shouldReturn400ForIllegalArgumentException" classname="com.example.app.GlobalExceptionHandlerTest" time="0.006"/>
+  <testcase name="shouldReturnCorrectContentTypeForErrorResponse" classname="com.example.app.GlobalExceptionHandlerTest" time="0.005"/>
 </testsuite>

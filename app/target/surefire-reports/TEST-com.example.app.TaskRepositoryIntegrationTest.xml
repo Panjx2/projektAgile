@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.app.DtoMapperTest" time="0.004" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.app.TaskRepositoryIntegrationTest" time="1.572" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -49,7 +49,6 @@
     <property name="localRepository" value="/Users/sebastiancnotalski/.m2/repository"/>
     <property name="java.vendor.url.bug" value="https://github.com/Homebrew/homebrew-core/issues"/>
     <property name="java.io.tmpdir" value="/var/folders/3l/xt6kpkfx36n00q_965wdyqr00000gn/T/"/>
-    <property name="com.zaxxer.hikari.pool_number" value="24"/>
     <property name="java.version" value="25.0.2"/>
     <property name="user.dir" value="/Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app"/>
     <property name="os.arch" value="aarch64"/>
@@ -68,17 +67,766 @@
     <property name="java.class.version" value="69.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[app] "/>
   </properties>
-  <testcase name="shouldMapUserToDto" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectDtoToEntity" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectToDtoWithUserIds" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapUserDtoToEntityWithAllFields" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectToDtoWithNullUsersAsNullUserIds" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapTaskToDtoWithNullProjectAsNullId" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldNotCopyPasswordToUserDto" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectToDto" classname="com.example.app.DtoMapperTest" time="0.001"/>
-  <testcase name="shouldMapProjectDtoToEntityIgnoringUserIds" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapTaskToDtoWithNullAssignedUserAsNullId" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapTaskToDtoWithAllRelations" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapProjectDtoToEntityWithEmptyNonNullUsersSet" classname="com.example.app.DtoMapperTest" time="0.0"/>
-  <testcase name="shouldMapTaskDtoToEntity" classname="com.example.app.DtoMapperTest" time="0.0"/>
+  <testcase name="shouldFilterTasksByPriorityUsingSpec" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.154">
+    <system-out><![CDATA[2026-06-11T18:32:11.099+02:00  INFO 21728 --- [app] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.app.TaskRepositoryIntegrationTest]: TaskRepositoryIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-06-11T18:32:11.108+02:00  INFO 21728 --- [app] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.app.AppApplication for test class com.example.app.TaskRepositoryIntegrationTest
+2026-06-11T18:32:11.110+02:00  INFO 21728 --- [app] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-06-11T18:32:11.124+02:00  INFO 21728 --- [app] [           main] c.e.app.TaskRepositoryIntegrationTest    : Starting TaskRepositoryIntegrationTest using Java 25.0.2 with PID 21728 (started by sebastiancnotalski in /Users/sebastiancnotalski/Desktop/Agile/projekt/projektAgile/app)
+2026-06-11T18:32:11.124+02:00  INFO 21728 --- [app] [           main] c.e.app.TaskRepositoryIntegrationTest    : The following 1 profile is active: "test"
+2026-06-11T18:32:11.197+02:00  INFO 21728 --- [app] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-11T18:32:11.221+02:00  INFO 21728 --- [app] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 5 JPA repository interfaces.
+2026-06-11T18:32:11.245+02:00  INFO 21728 --- [app] [           main] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
+2026-06-11T18:32:11.268+02:00  INFO 21728 --- [app] [           main] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:f6acd9b6-9fc4-4ad1-b47e-4bfa1c15a930;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2026-06-11T18:32:11.405+02:00  INFO 21728 --- [app] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-06-11T18:32:11.439+02:00  INFO 21728 --- [app] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-06-11T18:32:11.592+02:00  INFO 21728 --- [app] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-11T18:32:11.619+02:00  WARN 21728 --- [app] [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-11T18:32:11.629+02:00  INFO 21728 --- [app] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:f6acd9b6-9fc4-4ad1-b47e-4bfa1c15a930]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: F6ACD9B6-9FC4-4AD1-B47E-4BFA1C15A930/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+Hibernate: 
+    create global temporary table HTE_messages(rn_ integer not null, createdAt timestamp(6), file_id bigint, id bigint, project_id bigint, receiver_id bigint, sender_id bigint, content varchar(255), type enum ('FILE', 'TEXT'), primary key (rn_)) transactional
+Hibernate: 
+    create global temporary table HTE_files(rn_ integer not null, id bigint, project_id bigint, task_id bigint, name varchar(255), path varchar(255), primary key (rn_)) transactional
+Hibernate: 
+    create global temporary table HTE_projects(rn_ integer not null, id bigint, name varchar(255), primary key (rn_)) transactional
+Hibernate: 
+    create global temporary table HTE_tasks(rn_ integer not null, assignedUser_id bigint, id bigint, project_id bigint, name varchar(255), priority enum ('HIGH', 'LOW', 'MEDIUM'), status enum ('DONE', 'IN_PROGRESS', 'TODO'), primary key (rn_)) transactional
+2026-06-11T18:32:12.089+02:00  INFO 21728 --- [app] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    drop table if exists files cascade 
+Hibernate: 
+    drop table if exists messages cascade 
+Hibernate: 
+    drop table if exists project_users cascade 
+Hibernate: 
+    drop table if exists projects cascade 
+Hibernate: 
+    drop table if exists tasks cascade 
+Hibernate: 
+    drop table if exists users cascade 
+Hibernate: 
+    drop sequence if exists files_seq
+Hibernate: 
+    drop sequence if exists messages_seq
+Hibernate: 
+    drop sequence if exists projects_seq
+Hibernate: 
+    drop sequence if exists tasks_seq
+Hibernate: 
+    create sequence files_seq start with 1 increment by 50
+Hibernate: 
+    create sequence messages_seq start with 1 increment by 50
+Hibernate: 
+    create sequence projects_seq start with 1 increment by 50
+Hibernate: 
+    create sequence tasks_seq start with 1 increment by 50
+Hibernate: 
+    create table files (
+        id bigint not null,
+        project_id bigint,
+        task_id bigint,
+        name varchar(255) not null,
+        path varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table messages (
+        created_at timestamp(6),
+        file_id bigint unique,
+        id bigint not null,
+        project_id bigint,
+        receiver_id bigint,
+        sender_id bigint not null,
+        content varchar(255) not null,
+        type enum ('FILE','TEXT'),
+        primary key (id)
+    )
+Hibernate: 
+    create table project_users (
+        project_id bigint not null,
+        user_id bigint not null,
+        primary key (project_id, user_id)
+    )
+Hibernate: 
+    create table projects (
+        id bigint not null,
+        name varchar(255),
+        primary key (id)
+    )
+Hibernate: 
+    create table tasks (
+        id bigint not null,
+        project_id bigint not null,
+        user_id bigint,
+        name varchar(255) not null,
+        priority enum ('HIGH','LOW','MEDIUM') not null,
+        status enum ('DONE','IN_PROGRESS','TODO') not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table users (
+        id bigint generated by default as identity,
+        email varchar(255) not null unique,
+        first_name varchar(255) not null,
+        last_name varchar(255) not null,
+        password varchar(255) not null,
+        role varchar(255) not null,
+        username varchar(255) not null unique,
+        primary key (id)
+    )
+Hibernate: 
+    alter table if exists files 
+       add constraint FKncpjdlvw4479eu6qnh5a4fo9t 
+       foreign key (project_id) 
+       references projects
+Hibernate: 
+    alter table if exists files 
+       add constraint FKbf6pb5mdsgg5if1g0d2yikpjb 
+       foreign key (task_id) 
+       references tasks
+Hibernate: 
+    alter table if exists messages 
+       add constraint FKrvm6kfareq86j08cv7n03ocwq 
+       foreign key (file_id) 
+       references files
+Hibernate: 
+    alter table if exists messages 
+       add constraint FKiasav0fqhcy7ghjy0rwyh9ydn 
+       foreign key (project_id) 
+       references projects
+Hibernate: 
+    alter table if exists messages 
+       add constraint FKt05r0b6n0iis8u7dfna4xdh73 
+       foreign key (receiver_id) 
+       references users
+Hibernate: 
+    alter table if exists messages 
+       add constraint FK4ui4nnwntodh6wjvck53dbk9m 
+       foreign key (sender_id) 
+       references users
+Hibernate: 
+    alter table if exists project_users 
+       add constraint FK8w55cu3qmg4yo0vy0b8e3ivk4 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    alter table if exists project_users 
+       add constraint FKn2d9w5xxgord5j4k2963p8o1g 
+       foreign key (project_id) 
+       references projects
+Hibernate: 
+    alter table if exists tasks 
+       add constraint FK6s1ob9k4ihi75xbxe2w0ylsdh 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    alter table if exists tasks 
+       add constraint FKsfhn82y57i3k9uxww1s007acc 
+       foreign key (project_id) 
+       references projects
+2026-06-11T18:32:12.127+02:00  INFO 21728 --- [app] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-11T18:32:12.174+02:00  INFO 21728 --- [app] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-11T18:32:12.293+02:00  INFO 21728 --- [app] [           main] c.e.app.TaskRepositoryIntegrationTest    : Started TaskRepositoryIntegrationTest in 1.182 seconds (process running for 4.192)
+Hibernate: 
+    select
+        next value 
+    for
+        projects_seq
+Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        next value 
+    for
+        tasks_seq
+Hibernate: 
+    select
+        next value 
+    for
+        tasks_seq
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.project_id=? 
+        and t1_0.priority=?
+]]></system-out>
+  </testcase>
+  <testcase name="shouldFilterTasksByAssignedUserUsingSpec" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.013">
+    <system-out><![CDATA[Hibernate: 
+    select
+        next value 
+    for
+        projects_seq
+Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    left join
+        users au1_0 
+            on au1_0.id=t1_0.user_id 
+    where
+        lower(au1_0.username) like ? escape ''
+]]></system-out>
+  </testcase>
+  <testcase name="shouldSaveAndRetrieveTask" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.004">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+]]></system-out>
+  </testcase>
+  <testcase name="shouldFilterTasksByNameContainingUsingSpec" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.007">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.project_id=? 
+        and lower(t1_0.name) like ? escape ''
+]]></system-out>
+  </testcase>
+  <testcase name="shouldCombineMultipleSpecifications" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.006">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.project_id=? 
+        and t1_0.status=? 
+        and t1_0.priority=?
+]]></system-out>
+  </testcase>
+  <testcase name="shouldFindTasksByProject" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.133">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.project_id=?
+]]></system-out>
+  </testcase>
+  <testcase name="shouldReturnEmptyListWhenNullProjectIdSpec" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.006">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0
+]]></system-out>
+  </testcase>
+  <testcase name="shouldDeleteTask" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.008">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+]]></system-out>
+  </testcase>
+  <testcase name="shouldFindTasksByAssignedUser" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.007">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.user_id=?
+]]></system-out>
+  </testcase>
+  <testcase name="shouldFilterTasksByStatusUsingSpec" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.007">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.project_id=? 
+        and t1_0.status=?
+]]></system-out>
+  </testcase>
+  <testcase name="shouldFilterTasksByProjectIdUsingSpec" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.005">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.project_id=?
+]]></system-out>
+  </testcase>
+  <testcase name="shouldFindTasksByStatus" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.006">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.status=?
+]]></system-out>
+  </testcase>
+  <testcase name="shouldFindTasksByProjectAndStatus" classname="com.example.app.TaskRepositoryIntegrationTest" time="0.01">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        projects
+        (name, id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, first_name, last_name, password, role, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tasks
+        (user_id, name, priority, project_id, status, id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.user_id,
+        t1_0.name,
+        t1_0.priority,
+        t1_0.project_id,
+        t1_0.status 
+    from
+        tasks t1_0 
+    where
+        t1_0.project_id=? 
+        and t1_0.status=?
+]]></system-out>
+  </testcase>
 </testsuite>
