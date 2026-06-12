@@ -13,4 +13,5 @@ public class ProjectDto {
 
     private String name;
     private Set<Long> userIds;
+    private Set<Long> taskIds;
 }

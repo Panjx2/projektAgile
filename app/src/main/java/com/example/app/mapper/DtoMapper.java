@@ -49,6 +49,14 @@ public class DtoMapper {
                             .collect(Collectors.toSet())
             );
         }
+        if (project.getTasks() != null) {
+            dto.setTaskIds(
+                    project.getTasks()
+                            .stream()
+                            .map(Task::getId)
+                            .collect(Collectors.toSet())
+            );
+        }
         return dto;
     }
 
