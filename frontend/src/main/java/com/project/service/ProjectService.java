@@ -2,9 +2,12 @@ package com.project.service;
 
 import com.project.model.Project;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface ProjectService {
     List<Project> getAllProjects();
+
+    Page<Project> getProjects(String search, int page, int size);
 
     Project getProjectById(Long id);
 

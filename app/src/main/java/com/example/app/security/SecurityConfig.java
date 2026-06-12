@@ -62,18 +62,6 @@ public class SecurityConfig {
 
                 userRepository.save(admin);
             }
-            
-            if (userRepository.findByUsername("user").isEmpty()) {
-                User user = new User();
-                user.setUsername("user");
-                user.setEmail("user@sample.com");
-                user.setFirstName("User");
-                user.setLastName("User");
-                user.setPassword(encoder.encode("user"));
-                user.setRole("ROLE_USER");
-
-                userRepository.save(user);
-            }
         };
     }
 }

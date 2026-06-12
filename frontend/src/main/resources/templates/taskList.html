@@ -30,6 +30,18 @@
 
     <div class="top-panel">
         <a class="btn" th:href="@{/taskEdit(projectId=${projectId})}">+ Nowe zadanie</a>
+
+        <form class="search-form" th:action="@{/taskList}" method="get">
+            <input type="hidden" name="projectId" th:value="${projectId}" />
+            <input class="fld search-input"
+                   type="text"
+                   name="search"
+                   th:value="${search}"
+                   placeholder="Szukaj po nazwie zadania..." />
+            <button class="btn btn-secondary" type="submit">Szukaj</button>
+            <a th:if="${search != null and !search.isEmpty()}"
+               class="btn btn-muted" th:href="@{/taskList(projectId=${projectId})}">Wyczysc</a>
+        </form>
     </div>
 
     <section class="table-card">

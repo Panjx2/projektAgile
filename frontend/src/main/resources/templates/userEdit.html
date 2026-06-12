@@ -66,9 +66,13 @@
                 <input id="lastName" th:field="*{lastName}" class="fld" required />
             </div>
 
-            <div class="field-wrap">
+            <div class="field-wrap" th:if="*{user_id != null}">
                 <label for="role" class="lbl">Rola:</label>
-                <input id="role" th:field="*{role}" class="fld" required />
+                <select th:if="${isAdmin}" id="role" th:field="*{role}" class="fld">
+                    <option value="ROLE_USER">User</option>
+                    <option value="ROLE_ADMIN">Admin</option>
+                </select>
+                <input th:unless="${isAdmin}" id="role" th:field="*{role}" class="fld" readonly />
             </div>
 
             <div class="field-wrap">

@@ -4,6 +4,8 @@ import com.example.app.data.User;
 import com.example.app.dto.UserDto;
 import com.example.app.mapper.DtoMapper;
 import com.example.app.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -30,6 +32,14 @@ public class UserController {
     @GetMapping
     public List<UserDto> getUsers() {
         return userService.getAllUsers().stream().map(dtoMapper::toDto).toList();
+    }
+
+    @GetMapping("/page")
+    public Page<UserDto> getUsersPage(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return userService.getUsers(search, PageRequest.of(page, size)).map(dtoMapper::toDto);
     }
 
     @GetMapping("/me")

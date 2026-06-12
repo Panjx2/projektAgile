@@ -63,7 +63,7 @@ public class AuthController {
         return "login";
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public String logout() {
         tokenStorage.clear();
         return "redirect:/login";

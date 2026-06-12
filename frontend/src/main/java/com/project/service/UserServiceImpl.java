@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,24 @@ public class UserServiceImpl implements UserService {
                     throw new HttpException(res.getStatusCode(), res.getHeaders());
                 })
                 .body(new ParameterizedTypeReference<List<User>>() {});
+    }
+
+    @Override
+    public Page<User> getUsers(String search, int page, int size) {
+        logger.info("REQUEST -> GET {}/page", getResourcePath());
+        return restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(getResourcePath() + "/page")
+                        .queryParamIfPresent("search",
+                                java.util.Optional.ofNullable(search).filter(s -> !s.isBlank()))
+                        .queryParam("page", page)
+                        .queryParam("size", size)
+                        .build())
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, res) -> {
+                    throw new HttpException(res.getStatusCode(), res.getHeaders());
+                })
+                .body(new ParameterizedTypeReference<RestResponsePage<User>>() {});
     }
 
     @Override

@@ -32,6 +32,17 @@
 
     <div class="top-panel">
         <a class="btn" th:href="@{/projectEdit}">+ Nowy projekt</a>
+
+        <form class="search-form" th:action="@{/projectList}" method="get">
+            <input class="fld search-input"
+                   type="text"
+                   name="search"
+                   th:value="${search}"
+                   placeholder="Szukaj po nazwie projektu..." />
+            <button class="btn btn-secondary" type="submit">Szukaj</button>
+            <a th:if="${search != null and !search.isEmpty()}"
+               class="btn btn-muted" th:href="@{/projectList}">Wyczysc</a>
+        </form>
     </div>
 
     <section class="table-card">
@@ -60,6 +71,19 @@
             </tbody>
         </table>
     </section>
+
+    <nav class="pagination" th:if="${totalPages > 1}">
+        <a class="btn btn-secondary"
+           th:classappend="${currentPage == 0} ? 'btn-disabled' : ''"
+           th:href="@{/projectList(search=${search}, page=${currentPage - 1})}">‹ Poprzednia</a>
+
+        <span class="page-info"
+              th:text="'Strona ' + (${currentPage} + 1) + ' z ' + ${totalPages}">Strona 1 z 1</span>
+
+        <a class="btn btn-secondary"
+           th:classappend="${currentPage + 1 >= totalPages} ? 'btn-disabled' : ''"
+           th:href="@{/projectList(search=${search}, page=${currentPage + 1})}">Nastepna ›</a>
+    </nav>
 </div>
 </body>
 </html>

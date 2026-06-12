@@ -26,9 +26,19 @@ public class TaskController {
     }
 
     @GetMapping("/taskList")
-    public String taskList(@RequestParam Long projectId, Model model) {
-        model.addAttribute("tasks", taskService.getTasksByProject(projectId));
+    public String taskList(@RequestParam Long projectId,
+                           @RequestParam(required = false) String search,
+                           Model model) {
+        var tasks = taskService.getTasksByProject(projectId);
+        if (search != null && !search.isBlank()) {
+            String needle = search.toLowerCase();
+            tasks = tasks.stream()
+                    .filter(t -> t.getName() != null && t.getName().toLowerCase().contains(needle))
+                    .toList();
+        }
+        model.addAttribute("tasks", tasks);
         model.addAttribute("projectId", projectId);
+        model.addAttribute("search", search);
         model.addAttribute("statuses", TaskStatus.values());
         model.addAttribute("priorities", TaskPriority.values());
         model.addAttribute("users", userService.getAllUsers());

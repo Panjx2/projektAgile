@@ -1,19 +1,30 @@
 package com.project.controller;
 
+import com.project.service.TokenStorage;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import java.security.Principal;
-
 @ControllerAdvice
 public class LoginController {
+
+    private final TokenStorage tokenStorage;
+
+    public LoginController(TokenStorage tokenStorage) {
+        this.tokenStorage = tokenStorage;
+    }
+
     @ModelAttribute("loggedIn")
-    public Boolean loggedIn(Principal principal) {
-        return principal != null;
+    public Boolean loggedIn() {
+        return tokenStorage.hasToken();
     }
 
     @ModelAttribute("username")
-    public String username(Principal principal) {
-        return principal != null ? principal.getName() : null;
+    public String username() {
+        return tokenStorage.getUsername();
+    }
+
+    @ModelAttribute("isAdmin")
+    public Boolean isAdmin() {
+        return "ROLE_ADMIN".equals(tokenStorage.getRole());
     }
 }

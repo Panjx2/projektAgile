@@ -30,6 +30,21 @@
 
     <div class="err" th:if="${error}" th:text="${error}">Blad</div>
 
+    <div class="top-panel">
+        <form class="search-form" th:action="@{/projectUsers}" method="get">
+            <input type="hidden" name="projectId" th:value="${project.projectId}" />
+            <input class="fld search-input"
+                   type="text"
+                   name="search"
+                   th:value="${search}"
+                   placeholder="Szukaj po nazwie uzytkownika..." />
+            <button class="btn btn-secondary" type="submit">Szukaj</button>
+            <a th:if="${search != null and !search.isEmpty()}"
+               class="btn btn-muted"
+               th:href="@{/projectUsers(projectId=${project.projectId})}">Wyczysc</a>
+        </form>
+    </div>
+
     <section class="table-card form-card">
         <form class="assign-form" th:action="@{/projectUsers}" method="post">
             <input type="hidden" name="projectId" th:value="${project.projectId}" />
@@ -61,7 +76,9 @@
             </thead>
             <tbody>
             <tr th:each="user : ${users}"
-                th:if="${project.userIds.contains(user.getUser_id())}">
+                th:if="${project.userIds.contains(user.getUser_id())
+                        and (search == null or search.isEmpty()
+                             or #strings.containsIgnoreCase(user.username, search))}">
                 <td th:text="${user.getUser_id()}">1</td>
                 <td th:text="${user.username}">username</td>
                 <td th:text="${user.email}">email@example.com</td>

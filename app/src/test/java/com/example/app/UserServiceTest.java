@@ -21,6 +21,9 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private com.example.app.repository.MessageRepository messageRepository;
+
     @InjectMocks
     private UserService userService;
 
@@ -108,9 +111,13 @@ class UserServiceTest {
 
     @Test
     void shouldDeleteUser() {
+        User user = new User();
+        user.setId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
         userService.deleteUser(1L);
 
-        verify(userRepository).deleteById(1L);
+        verify(userRepository).delete(user);
     }
 
     @Test

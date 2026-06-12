@@ -31,8 +31,15 @@ public class ProjectController {
     }
 
     @GetMapping("/projectList")
-    public String projectList(Model model) {
-        model.addAttribute("projects", projectService.getAllProjects());
+    public String projectList(@RequestParam(required = false) String search,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "10") int size,
+                              Model model) {
+        var projects = projectService.getProjects(search, page, size);
+        model.addAttribute("projects", projects.getContent());
+        model.addAttribute("currentPage", projects.getNumber());
+        model.addAttribute("totalPages", projects.getTotalPages());
+        model.addAttribute("search", search);
         return "projectList";
     }
 
@@ -94,11 +101,14 @@ public class ProjectController {
     }
 
     @GetMapping("/projectUsers")
-    public String projectUsers(@RequestParam(name = "projectId", required = false) Long projectId, Model model) {
+    public String projectUsers(@RequestParam(name = "projectId", required = false) Long projectId,
+                               @RequestParam(required = false) String search,
+                               Model model) {
         if (projectId == null) {
             return "redirect:/projectList";
         }
         populateProjectUsers(model, projectId);
+        model.addAttribute("search", search);
         return "projectUsers";
     }
 

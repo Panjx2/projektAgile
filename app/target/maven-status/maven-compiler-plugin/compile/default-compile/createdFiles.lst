@@ -10,9 +10,9 @@ com/example/app/dto/MessageDTO.class
 com/example/app/controller/FileController.class
 com/example/app/controller/GlobalExceptionHandler.class
 com/example/app/repository/ProjectRepository.class
-com/example/app/AppApplication.class
 com/example/app/controller/UserController.class
 com/example/app/repository/FileEntityRepository.class
+com/example/app/AppApplication.class
 com/example/app/security/JwtUtil.class
 com/example/app/dto/ProjectDto.class
 com/example/app/security/SecurityConfig.class

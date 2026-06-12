@@ -25,8 +25,15 @@ public class UserController {
     }
 
     @GetMapping("/userList")
-    public String userList(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+    public String userList(@RequestParam(required = false) String search,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "10") int size,
+                           Model model) {
+        var users = userService.getUsers(search, page, size);
+        model.addAttribute("users", users.getContent());
+        model.addAttribute("currentPage", users.getNumber());
+        model.addAttribute("totalPages", users.getTotalPages());
+        model.addAttribute("search", search);
         return "userList";
     }
 
@@ -47,6 +54,7 @@ public class UserController {
         }
         try {
             if (user.getUser_id() == null) {
+                user.setRole("ROLE_USER");
                 userService.createUser(user);
             } else {
                 userService.updateUser(user.getUser_id(), user);

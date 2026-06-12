@@ -138,6 +138,58 @@ h1 {
 .top-panel {
     margin-top: 28px;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    min-width: min(100%, 260px);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 10px 12px;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.97rem;
+}
+
+.btn-muted {
+    background: rgba(255, 255, 255, 0.7);
+    color: #38536f;
+    box-shadow: 0 10px 18px rgba(56, 90, 127, 0.1);
+    border: 1px solid rgba(83, 119, 162, 0.22);
+}
+
+.btn-muted:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.page-info {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.btn-disabled {
+    pointer-events: none;
+    opacity: 0.45;
 }
 
 .btn {
