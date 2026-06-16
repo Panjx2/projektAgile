@@ -81,11 +81,57 @@
                        th:required="*{user_id == null}" />
             </div>
 
+            <div class="field-wrap">
+                <label for="repeatPassword" class="lbl">Powtorz haslo:</label>
+                <input id="repeatPassword" name="repeatPassword" type="password" class="fld"
+                       th:required="*{user_id == null}" />
+                <small id="repeatPasswordMsg" class="msg-text"></small>
+            </div>
+
             <div class="danger-panel" th:if="*{user_id != null}">
                 <button class="btn btn-danger" type="submit" name="delete" value="true">Usun</button>
             </div>
         </div>
     </form>
 </div>
+
+<script>
+    const form = document.querySelector('form');
+    const password = document.getElementById('password');
+    const repeatPassword = document.getElementById('repeatPassword');
+    const repeatPasswordMsg = document.getElementById('repeatPasswordMsg');
+
+    function passwordsMatch() {
+        return password.value === repeatPassword.value;
+    }
+
+    function validateRepeatPassword() {
+        if (!passwordsMatch()) {
+            repeatPasswordMsg.innerText = 'Hasla nie sa takie same';
+            repeatPasswordMsg.className = 'msg-text err-text';
+            repeatPassword.setCustomValidity('Hasla nie sa takie same');
+        } else {
+            repeatPasswordMsg.innerText = repeatPassword.value ? 'Hasla sa zgodne' : '';
+            repeatPasswordMsg.className = 'msg-text ok-text';
+            repeatPassword.setCustomValidity('');
+        }
+    }
+
+    password.addEventListener('input', validateRepeatPassword);
+    repeatPassword.addEventListener('input', validateRepeatPassword);
+
+    form.addEventListener('submit', (e) => {
+        // Pomijamy walidacje dla przyciskow Anuluj / Usun
+        const action = e.submitter ? e.submitter.name : '';
+        if (action === 'cancel' || action === 'delete') {
+            return;
+        }
+        if (!passwordsMatch()) {
+            e.preventDefault();
+            validateRepeatPassword();
+        }
+    });
+</script>
+
 </body>
 </html>
